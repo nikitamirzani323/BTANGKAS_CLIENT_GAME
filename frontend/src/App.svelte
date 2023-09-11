@@ -2085,7 +2085,7 @@
  
 </main>
 
-<footer class="footer footer-center p-4 text-base-content mt-2 text-center">
+<footer class="footer footer-center p-4 text-base-content mt-2 text-center select-none">
   <div class="grid">
     <p class="text-xs lg:text-sm text-center">
       0.0.1
