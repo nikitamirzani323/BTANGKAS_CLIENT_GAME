@@ -2100,15 +2100,14 @@
 
 <input type="checkbox" id="my-modal-allinvoice" class="modal-toggle" bind:checked={isModal_allinvoice}>
 <div class="modal" on:click|self={()=>isModal_allinvoice = false}>
-  <div class="modal-box relative select-none  lg:max-w-4xl h-full lg:max-h-[600px] rounded-none lg:rounded-lg p-2 lg:p-4 overflow-hidden">
+  <div class="modal-box relative select-none  lg:max-w-3xl h-full lg:max-h-[600px] rounded-none lg:rounded-lg p-2 lg:p-4 overflow-hidden">
     <label for="my-modal-allinvoice" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
     <h3 class="text-xs lg:text-sm font-bold -mt-1">INVOICE</h3>
     <div class="overflow-auto h-[90%] scrollbar-thin scrollbar-thumb-green-100 mt-4">
         <table class="table table-xs w-full" >
             <thead class="sticky top-0">
                 <tr>
-                    <th width="5%" class="text-xs text-center align-top">ID</th>
-                    <th width="5%" class="text-xs text-center align-top">DATE</th>
+                    <th width="5%" class="text-xs text-left align-top">CODE TRANSAKSI</th>
                     <th width="5%" class="text-xs text-center align-top">STATUS</th>
                     <th width="5%" class="text-xs text-right align-top">ROUND BET X BET</th>
                     <th width="5%" class="text-xs text-right align-top">CREDIT<br />BEFORE</th>
@@ -2121,17 +2120,19 @@
             <tbody>
                 {#each list_datasend as rec}
                 <tr>
-                  <td class="text-xs  text-center whitespace-nowrap align-top">{rec.id_transaksi}</td>
-                  <td class="text-xs  text-center whitespace-nowrap align-top">{rec.date_transaksi}</td>
+                  <td class="text-xs  text-left whitespace-nowrap align-top">
+                    {rec.id_transaksi}<br />
+                    {rec.date_transaksi}
+                  </td>
                   <td class="text-xs  text-center whitespace-nowrap align-top">
-                    <span class="{rec.status_transaction_css} p-1.5 text-xs lg:text-sm  uppercase  rounded-lg w-20 ">{rec.status_transaction}</span>
+                    <span class="{rec.status_transaction_css} p-1 text-xs lg:text-sm  uppercase  rounded-lg w-20 ">{rec.status_transaction}</span>
                   </td>
                   <td class="text-xs text-right link-accent whitespace-nowrap align-top">{new Intl.NumberFormat().format(rec.round_bet)} X (-{new Intl.NumberFormat().format(rec.bet)})</td>
                   <td class="text-xs text-right link-accent whitespace-nowrap align-top">{new Intl.NumberFormat().format(rec.credit_before)}</td>
                   <td class="text-xs text-right text-error whitespace-nowrap align-top">-{new Intl.NumberFormat().format(rec.total_bet)}</td>
                   <td class="text-xs text-right text-secondary whitespace-nowrap align-top">(+{new Intl.NumberFormat().format(rec.win)})</td>
                   <td class="text-xs text-right link-accent whitespace-nowrap align-top">{new Intl.NumberFormat().format(rec.credit_after)}</td>
-                  <td class="text-xs text-center whitespace-nowrap w-52 ">
+                  <td class="text-xs text-center whitespace-nowrap w-52 align-top">
                     <label on:click={() => {
                         call_detailinvoice(rec.result_card,rec.result_card_win,rec.note_win);
                       }}  class="badge badge-neutral cursor-pointer">Detail</label>
