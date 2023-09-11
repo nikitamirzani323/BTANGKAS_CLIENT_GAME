@@ -1150,7 +1150,7 @@
             temp.push(prop + ":" + counts[prop])
         }
     }
-  
+    console.log(temp)
     if(temp.length > 0){
       let temp_string = temp[0]
       let temp_result = temp_string.split(":");
@@ -1164,6 +1164,7 @@
           }
         }
         total_card = parseInt(total_temp) + total_jk
+       
         if(total_card == 3){
           info_result = "3 Of A Kind"
           info_card = pattern_stright_10
@@ -1194,7 +1195,7 @@
           }
         }
         total_card = parseInt(total_temp) + total_jk
-    
+        console.log("Total card :" + total_card)
         if(total_card == 3){
           info_result = "3 Of A Kind"
           info_card = pattern_stright_10
@@ -1202,7 +1203,6 @@
 
           for(let i in arr_id){
             let temp_data = card_result_data.find(card => card.id == arr_id[i])
-            // console.log(temp_data.id+"-"+temp_data.img+"-"+temp_data.val_display)
             for(let x=0;x<temp.length;x++){
               temp_result = temp[x].split(":");
               if(temp_result[0] == temp_data.val_display || "1" == temp_data.val_display){
@@ -1213,6 +1213,15 @@
               }
             }
           }
+
+          info_card_win = info_card_win.reduce((info_card_win, current) => {
+          const x = info_card_win.find(item => item.id === current.id);
+            if (!x) {
+              return info_card_win.concat([current]);
+            } else {
+              return info_card_win;
+            }
+          }, []);
 
           credit_animation(credit,7,totalbet)
           flag_func = true;
@@ -1453,6 +1462,17 @@
     // shuffleArray.push(array[18]);
     // shuffleArray.push(array[32]);
     // shuffleArray.push(array[53]);
+    // console.log(shuffleArray)
+
+    // ==== 3 kind 3 ===
+    // shuffleArray = [];
+    // shuffleArray.push(array[12]);
+    // shuffleArray.push(array[18]);
+    // shuffleArray.push(array[25]);
+    // shuffleArray.push(array[36]);
+    // shuffleArray.push(array[52]);
+    // shuffleArray.push(array[0]);
+    // shuffleArray.push(array[49]);
     // console.log(shuffleArray)
 
     // ==== STRAIGHT ===
