@@ -108,6 +108,9 @@
   const pattern_stright_9 = [10,11,12,13,14]
   const pattern_stright_10 = [14,2,3,4,5]
   
+  let list_detailtransaksi = []
+  let list_detailtransaksi_win = []
+  let list_detailtransaksi_notewin = ""
   let list_datasend = []
   let info_card_win = []
   let counter_transaksi = 0;
@@ -129,7 +132,6 @@
   let card_result_4_id = "NULL"
   let card_result_5_id = "NULL"
   let card_result_6_id = "NULL"
-
   let card_result_0_class = ""
   let card_result_1_class = ""
   let card_result_2_class = ""
@@ -137,7 +139,6 @@
   let card_result_4_class = ""
   let card_result_5_class = ""
   let card_result_6_class = ""
-
   let card_result_0_img = "./"+path_card+"CARD_FLOP.png"
   let card_result_1_img = "./"+path_card+"CARD_FLOP.png"
   let card_result_2_img = "./"+path_card+"CARD_FLOP.png"
@@ -159,6 +160,7 @@
   let isModalMinBet = false;
   let isModal_allinvoice = false;
   let isModal_carabermain = false;
+  let isModal_detailtransaksi = false;
   let flag_win = false
   let shuffleArray = [];
   let usedIndexes = [];
@@ -208,6 +210,9 @@
     card_result_4_class = ""
     card_result_5_class = ""
     card_result_6_class = ""
+    list_detailtransaksi = []
+    list_detailtransaksi_win = []
+    list_detailtransaksi_notewin = ""
 	};
   const call_bet = () => {
     flag_minimalbet = true;
@@ -1740,45 +1745,13 @@
     list_point_style = "bg-slate-500"
     list_point_id = list_point[n].id
 
-    
-    // console.log("POINT ID : " + list_point_id)
-    // console.log("INFO RESULT : " + info_result)
-    // console.log("INFO CARD : " + info_card)
 
 
     c_before = credit;
     credit = credit - (parseInt(min_bet) * totalbet);
     c_after = credit;
 
-    // console.log(shuffleArray)
-    // console.log(info_card_win)
-    // console.log(card_result_0_id+","+card_result_1_id+","+card_result_2_id+","+card_result_3_id+","+card_result_4_id+","+card_result_5_id+","+card_result_6_id)
-    // for(let i in info_card_win){
-    //   // let temp_data = shuffleArray.find(card => card.id != info_card_win[i].id)
-    //   switch(info_card_win[i].id){
-    //     case card_result_0_id:
-    //       card_result_0_class = "brightness-50"
-    //       break;
-    //     case card_result_1_id:
-    //       card_result_1_class = "brightness-50"
-    //       break;
-    //     case card_result_2_id:
-    //       card_result_2_class = "brightness-50"
-    //       break;
-    //     case card_result_3_id:
-    //       card_result_3_class = "brightness-50"
-    //       break;
-    //     case card_result_4_id:
-    //       card_result_4_class = "brightness-50"
-    //       break;
-    //     case card_result_5_id:
-    //       card_result_5_class = "brightness-50"
-    //       break;
-    //     case card_result_6_id:
-    //       card_result_6_class = "brightness-50"
-    //       break;
-    //   }
-    // }
+    
     card_result_0_class = "brightness-50"
     card_result_1_class = "brightness-50"
     card_result_2_class = "brightness-50"
@@ -1878,7 +1851,7 @@
     }
     counter_transaksi = counter_transaksi + 1
     const objSend = {
-      id_transaksi:counter_transaksi,
+      id_transaksi: dayjs().tz(client_timezone).format("YYYYMMDDHHmmss")+counter_transaksi,
       date_transaksi:clockmachine_data,
       round_bet:parseInt(data_roundbet),
       bet: parseInt(data_minbet), 
@@ -1894,6 +1867,8 @@
       status_transaction: data_statustransaksi
     };
     list_datasend = [...list_datasend,objSend]
+
+    list_datasend.sort((a, b) => b.id_transaksi - a.id_transaksi);
   }
   const handleInformation = () => {
       if(!flag_minimalbet){
@@ -1907,6 +1882,12 @@
   const call_allinvoice = () => {
     isModal_allinvoice = true
     // fetch_invoicell()
+	};
+  const call_detailinvoice = (e,f,d) => {
+    isModal_detailtransaksi = true
+    list_detailtransaksi = e
+    list_detailtransaksi_win = f
+    list_detailtransaksi_notewin = d
 	};
   const call_carabermain = () => {
     isModal_carabermain = true
@@ -1933,17 +1914,17 @@
     <div class="navbar-end hidden text-xs lg:text-sm lg:inline-block text-right">
         <div class="flex items-start  ">
           <div class="flex flex-col w-full">
-            <p class="w-full text-xs lg:text-sm text-right">
+            <p class="w-full text-xs lg:text-sm text-right select-none">
               Asia/Jakarta <br />
               {clockmachine}  WIB (+7)<br>
               developer <br />
               {client_ipaddress}
             </p>
-            <div class="w-full text-xs lg:text-sm text-right">
+            <div class="w-full text-xs lg:text-sm text-right select-none">
               CREDIT : IDR <span class="link-accent" style="--value:15;">{new Intl.NumberFormat().format(credit)}</span>
               <span class="{point_style_result}">{point_result}</span>
             </div>
-            <div class="w-full text-xs lg:text-sm text-right ">
+            <div class="w-full text-xs lg:text-sm text-right select-none">
               ROUND BET {totalbet}x<span class="link-accent">{min_bet}</span> : <span class="text-error">{new Intl.NumberFormat().format(min_bet*totalbet)}</span>
             </div>
           </div>
@@ -2119,23 +2100,22 @@
 
 <input type="checkbox" id="my-modal-allinvoice" class="modal-toggle" bind:checked={isModal_allinvoice}>
 <div class="modal" on:click|self={()=>isModal_allinvoice = false}>
-  <div class="modal-box relative select-none  lg:max-w-7xl h-full lg:max-h-[600px] rounded-none lg:rounded-lg p-2 lg:p-4 overflow-hidden">
+  <div class="modal-box relative select-none  lg:max-w-4xl h-full lg:max-h-[600px] rounded-none lg:rounded-lg p-2 lg:p-4 overflow-hidden">
     <label for="my-modal-allinvoice" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
     <h3 class="text-xs lg:text-sm font-bold -mt-1">INVOICE</h3>
     <div class="overflow-auto h-[90%] scrollbar-thin scrollbar-thumb-green-100 mt-4">
         <table class="table table-xs w-full" >
             <thead class="sticky top-0">
                 <tr>
-                    <th width="1%" class="text-xs text-center align-top">ID</th>
-                    <th width="4%" class="text-xs text-center align-top">DATE</th>
-                    <th width="4%" class="text-xs text-center align-top">STATUS</th>
-                    <th width="1%" class="text-xs text-right align-top">ROUND<br />BET</th>
-                    <th width="5%" class="text-xs text-right align-top">BET</th>
+                    <th width="5%" class="text-xs text-center align-top">ID</th>
+                    <th width="5%" class="text-xs text-center align-top">DATE</th>
+                    <th width="5%" class="text-xs text-center align-top">STATUS</th>
+                    <th width="5%" class="text-xs text-right align-top">ROUND BET X BET</th>
                     <th width="5%" class="text-xs text-right align-top">CREDIT<br />BEFORE</th>
                     <th width="5%" class="text-xs text-right align-top">TOTAL<br />BET</th>
                     <th width="5%" class="text-xs text-right align-top">WIN</th>
                     <th width="5%" class="text-xs text-right align-top">CREDIT<br />AFTER</th>
-                    <th width="*" class="text-xs text-left align-top">RESULT</th>
+                    <th width="*" class="text-xs text-center align-top">DETAIL</th>
                 </tr>
             </thead>
             <tbody>
@@ -2146,26 +2126,15 @@
                   <td class="text-xs  text-center whitespace-nowrap align-top">
                     <span class="{rec.status_transaction_css} p-1.5 text-xs lg:text-sm  uppercase  rounded-lg w-20 ">{rec.status_transaction}</span>
                   </td>
-                  <td class="text-xs text-right link-accent whitespace-nowrap align-top">{new Intl.NumberFormat().format(rec.round_bet)}</td>
-                  <td class="text-xs text-right text-error whitespace-nowrap align-top">(-{new Intl.NumberFormat().format(rec.bet)})</td>
+                  <td class="text-xs text-right link-accent whitespace-nowrap align-top">{new Intl.NumberFormat().format(rec.round_bet)} X (-{new Intl.NumberFormat().format(rec.bet)})</td>
                   <td class="text-xs text-right link-accent whitespace-nowrap align-top">{new Intl.NumberFormat().format(rec.credit_before)}</td>
                   <td class="text-xs text-right text-error whitespace-nowrap align-top">-{new Intl.NumberFormat().format(rec.total_bet)}</td>
                   <td class="text-xs text-right text-secondary whitespace-nowrap align-top">(+{new Intl.NumberFormat().format(rec.win)})</td>
                   <td class="text-xs text-right link-accent whitespace-nowrap align-top">{new Intl.NumberFormat().format(rec.credit_after)}</td>
-                  <td class="text-xs text-left whitespace-nowrap w-52">
-                    <div class="text-xs">
-                      {rec.note_win}
-                    </div>
-                    <div class="grid grid-cols-7 w-full mt-5">
-                      {#each rec.result_card as rec2}
-                        <img  src="{rec2.img}" alt="" srcset=""> 
-                      {/each}
-                    </div>
-                    <div class="grid grid-cols-7 mt-5 text-xs">
-                      {#each rec.result_card_win as rec2}
-                        <img  src="{rec2.img}" alt="" srcset=""> 
-                      {/each}
-                    </div>
+                  <td class="text-xs text-center whitespace-nowrap w-52 ">
+                    <label on:click={() => {
+                        call_detailinvoice(rec.result_card,rec.result_card_win,rec.note_win);
+                      }}  class="badge badge-neutral cursor-pointer">Detail</label>
                   </td>
                 </tr>
                 {/each}
@@ -2186,6 +2155,30 @@
   </div>
 </div>
 
+<input type="checkbox" id="my-modal-detailtransaksi" class="modal-toggle" bind:checked={isModal_detailtransaksi}>
+<div class="modal" on:click|self={()=>isModal_detailtransaksi = false}>
+  <div class="modal-box relative select-none  lg:max-w-4xl h-full lg:max-h-[600px] rounded-none lg:rounded-lg p-2 lg:p-4 overflow-hidden">
+    <label for="my-modal-detailtransaksi" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+    <h3 class="text-xs lg:text-sm font-bold -mt-1">DETAIL</h3>
+    <div class="overflow-auto h-[90%] scrollbar-thin scrollbar-thumb-green-100 mt-4">
+      <div class="flex flex-col gap-1 w-full">
+        <div class="grid grid-cols-7 w-full mt-5">
+          {#each list_detailtransaksi as rec2}
+            <img  src="{rec2.img}" alt="" srcset=""> 
+          {/each}
+        </div>
+        <div class="w-full text-center">
+          {list_detailtransaksi_notewin}
+        </div>
+        <div class="grid grid-cols-7 mt-5 w-full">
+          {#each list_detailtransaksi_win as rec2}
+          <img  src="{rec2.img}" alt="" srcset=""> 
+          {/each}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="hidden">
 {#each card_result_data as rec}
