@@ -1150,7 +1150,6 @@
             temp.push(prop + ":" + counts[prop])
         }
     }
-    console.log(temp)
     if(temp.length > 0){
       let temp_string = temp[0]
       let temp_result = temp_string.split(":");
@@ -1195,7 +1194,6 @@
           }
         }
         total_card = parseInt(total_temp) + total_jk
-        console.log("Total card :" + total_card)
         if(total_card == 3){
           info_result = "3 Of A Kind"
           info_card = pattern_stright_10
