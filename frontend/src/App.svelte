@@ -9,7 +9,8 @@
   let client_timezone = "Asia/Jakarta";
   let clockmachine = "";
   let clockmachine_data = "";
-  let credit = 50000
+  let credit = 50000;
+  let temp_credit = credit;
   let list_min_bet = [100,500,1000,1500,5000,10000,25000]
   let min_bet = "100"
   let totalbet = 0
@@ -113,7 +114,11 @@
   let list_detailtransaksi_notewin = ""
   let list_datasend = []
   let info_card_win = []
+  let list_combine = [];
+  let counter_putaran = 0;
   let counter_transaksi = 0;
+  let counter_lose = 0;
+  let counter_win = 0;
   let c_before = 0;
   let c_after = 0;
   let flag_all = true
@@ -344,6 +349,7 @@
       sound = 0;
       win[sound].play();
     }
+    
   }
   function royal_flush(arr_id){
     let flag_func = false
@@ -1409,6 +1415,41 @@
   }
   
   function shuffleArray_card(array){
+    if(counter_putaran == 0){
+      let putaran = Math.round(parseInt(temp_credit)/parseInt(min_bet))
+      let lose = 0.75
+      let win = 0.25
+      let lose_bet = putaran * lose
+      let win_bet = putaran - lose_bet
+      let list_lose = []
+      let list_win = []
+      
+      
+      for(let i=0;i<lose_bet;i++){
+        list_lose.push("N")
+      }
+      for(let i=0;i<win_bet;i++){
+        list_win.push("Y")
+      }
+      list_combine = list_lose.concat(list_win)
+      list_combine = shuffleArraypattern(list_combine)
+     
+      
+      function shuffleArraypattern(array) {
+          for (var i = array.length - 1; i > 0; i--) {
+              // Generate random number
+              var j = Math.floor(Math.random() * (i + 1));
+  
+              var temp = array[i];
+              array[i] = array[j];
+              array[j] = temp;
+          }
+          return array;
+      }
+    }
+    // console.log(list_combine);
+    // counter_putaran = counter_putaran + 1;
+
     let i = 0
     while(i<7){
       let randomNumber = Math.floor(Math.random() * array.length)
@@ -1418,6 +1459,9 @@
         i++;
       }
     }
+
+    console.log(shuffleArray)
+
     // ==== ACE PAIR ===
     // shuffleArray = [];
     // shuffleArray.push(array[12]);
@@ -1618,7 +1662,6 @@
      
     }
     if(count_bet == 3){
-      
       card_result_5_id = shuffleArray[5].id
       card_result_5_img = shuffleArray[5].img
       card_result_5_val = shuffleArray[5].val
@@ -1649,7 +1692,7 @@
       card_result_array_val.push(card_result_4_val)
       card_result_array_val.push(card_result_5_val)
       card_result_array_val.push(card_result_6_val)
-      // console.log(card_result_array_id)
+
       hitung(card_result_array_id,card_result_array_val);
     }
     return shuffleArray;
@@ -1864,8 +1907,10 @@
     let status_css = "";
     if(data_statustransaksi == "LOSE"){
       status_css = "bg-error text-white";
+      counter_lose = counter_lose + 1;
     }else{
       status_css = "bg-success text-black";
+      counter_win = counter_win + 1;
     }
     counter_transaksi = counter_transaksi + 1
     const objSend = {
@@ -1887,6 +1932,8 @@
     list_datasend = [...list_datasend,objSend]
 
     list_datasend.sort((a, b) => b.id_transaksi - a.id_transaksi);
+
+    console.log("LOSE :"+counter_lose+" -- WIN :"+counter_win)
   }
   const handleInformation = () => {
       if(!flag_minimalbet){
@@ -2118,7 +2165,7 @@
 
 <input type="checkbox" id="my-modal-allinvoice" class="modal-toggle" bind:checked={isModal_allinvoice}>
 <div class="modal" on:click|self={()=>isModal_allinvoice = false}>
-  <div class="modal-box relative select-none  lg:max-w-3xl h-full lg:max-h-[600px] rounded-none lg:rounded-lg p-2 lg:p-4 overflow-hidden">
+  <div class="modal-box relative select-none  lg:max-w-4xl h-full lg:max-h-[600px] rounded-none lg:rounded-lg p-2 lg:p-4 overflow-hidden">
     <label for="my-modal-allinvoice" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
     <h3 class="text-xs lg:text-sm font-bold -mt-1">INVOICE</h3>
     <div class="overflow-auto h-[90%] scrollbar-thin scrollbar-thumb-green-100 mt-4">
@@ -2128,10 +2175,10 @@
                     <th width="5%" class="text-xs text-left align-top">CODE TRANSAKSI</th>
                     <th width="5%" class="text-xs text-center align-top">STATUS</th>
                     <th width="5%" class="text-xs text-right align-top">ROUND BET X BET</th>
-                    <th width="5%" class="text-xs text-right align-top">CREDIT<br />BEFORE</th>
-                    <th width="5%" class="text-xs text-right align-top">TOTAL<br />BET</th>
+                    <th width="7%" class="text-xs text-right align-top">CREDIT BEFORE</th>
+                    <th width="7%" class="text-xs text-right align-top">TOTAL BET</th>
                     <th width="5%" class="text-xs text-right align-top">WIN</th>
-                    <th width="5%" class="text-xs text-right align-top">CREDIT<br />AFTER</th>
+                    <th width="7%" class="text-xs text-right align-top">CREDIT AFTER</th>
                     <th width="*" class="text-xs text-center align-top">DETAIL</th>
                 </tr>
             </thead>
