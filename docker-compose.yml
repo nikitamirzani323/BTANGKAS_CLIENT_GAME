@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  frontend-bolatangkas:
+    container_name: frontend-bolatangkas
+    image: frontend-bolatangkas:0.0.1
+    build: .
+    volumes:
+    - ./svelte:/app/svelte
+    ports:
+      - 2116:2116
+    restart: always
