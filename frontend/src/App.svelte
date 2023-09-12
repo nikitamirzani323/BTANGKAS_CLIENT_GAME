@@ -383,7 +383,7 @@
         }
       }
     }
-    console.log(data_result[2])
+    console.log("POINT : " + data_result[2])
     
     return [data_result[0],data_result[1],data_result[2]]
   }
