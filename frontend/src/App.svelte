@@ -303,7 +303,8 @@
       count_bet = 4
       sound = 0;
       spin[sound].play();
-      shuffleArray_deal()
+      factory_click("DEAL")
+      
 	};
   function hitung(arr_id,arr_val){
     // let flag_royalflush = false
@@ -1167,31 +1168,37 @@
   }
   function factory_click(e){
     let flag_hitung = true;
-    switch(count_bet){
-      case 1:
-        shuffleArray_card(card_result_data)
-        shuffleArray_bet()
-        flag_hitung = false;
-        break;
-      case 2:
-        shuffleArray_bet()
-        flag_hitung = false;
-        break;
-      case 3:
-        shuffleArray_bet()
-        flag_hitung = false;
-        break;
-      case 4:
-        if(e=="FULL_BET"){
+    if(e != "DEAL"){
+      switch(count_bet){
+        case 1:
           shuffleArray_card(card_result_data)
-          shuffleArray_fullbet()
-        }else{
           shuffleArray_bet()
-        }
-        flag_hitung = true;
-        
-        break;
+          flag_hitung = false;
+          break;
+        case 2:
+          shuffleArray_bet()
+          flag_hitung = false;
+          break;
+        case 3:
+          shuffleArray_bet()
+          flag_hitung = false;
+          break;
+        case 4:
+          if(e=="FULL_BET"){
+            shuffleArray_card(card_result_data)
+            shuffleArray_fullbet()
+          }else{
+            shuffleArray_bet()
+          }
+          flag_hitung = true;
+          
+          break;
+      }
+    }else{
+      shuffleArray_deal()
+      flag_hitung = true;
     }
+    
     
     if(flag_hitung){
       let status = hitung_statuswinlose(shuffleArray)
@@ -1445,7 +1452,7 @@
     if(count_bet == 4){
       flag_bet = false
     }
-    sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
+    // sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
     if(count_bet == 1){
       card_result_0_id = shuffleArray[0].id
       card_result_2_id = shuffleArray[2].id
@@ -1546,7 +1553,7 @@
     if(count_bet == 4){
       flag_bet = false
     }
-    // console.log("total bet : " + totalbet)
+   
     card_result_0_id = shuffleArray[0].id
     card_result_1_id = shuffleArray[1].id
     card_result_2_id = shuffleArray[2].id
@@ -1589,7 +1596,6 @@
     c_before = credit;
     credit = credit - (parseInt(min_bet) * totalbet);
     c_after = credit;
-    hitung(card_result_array_id,card_result_array_val);
   }
   function credit_animation_factory(credit_before,total_bet,data_win,n){
     let point = (list_point[n].poin* total_bet)*parseInt(min_bet);
