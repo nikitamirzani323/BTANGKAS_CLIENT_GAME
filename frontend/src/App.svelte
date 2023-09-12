@@ -115,6 +115,7 @@
   let list_datasend = []
   let info_card_win = []
   let list_combine = [];
+  let putaran = 0;
   let counter_putaran = 0;
   let counter_transaksi = 0;
   let counter_lose = 0;
@@ -307,49 +308,221 @@
       shuffleArray_deal()
 	};
   function hitung(arr_id,arr_val){
-    let flag_royalflush = false
-    let flag_fiveofkind = false
-    let flag_straight_flush = false
-    let flag_fourofkind = false
-    let flag_fullhouse = false
-    let flag_flush = false
-    let flag_straight = false
-    let flag_threeofkind = false
-    let flag_twopair = false
+    // let flag_royalflush = false
+    // let flag_fiveofkind = false
+    // let flag_straight_flush = false
+    // let flag_fourofkind = false
+    // let flag_fullhouse = false
+    // let flag_flush = false
+    // let flag_straight = false
+    // let flag_threeofkind = false
+    // let flag_twopair = false
     
-    flag_royalflush = royal_flush(arr_id)
-    if(!flag_royalflush){
-      flag_fiveofkind = five_kind(arr_id)
-      if(!flag_fiveofkind){
-        flag_straight_flush = straight_flush(arr_id)
-        if(!flag_straight_flush){
-          flag_fourofkind = fourofkind(arr_id,arr_val)
-          if(!flag_fourofkind){
-            flag_fullhouse = fullhouse(arr_id,arr_val)
-            if(!flag_fullhouse){
-              flag_flush = flush(arr_id,arr_val)
-              if(!flag_flush){
-                flag_straight = straight(arr_id)
-                if(!flag_straight){
-                  flag_threeofkind = threeofkind(arr_id)
-                  if(!flag_threeofkind){
-                    flag_twopair = twopair(arr_id,arr_val)
-                    if(!flag_twopair){
-                      acepair(arr_id)
-                    }
-                  }
-                }
-              }
-            }
+    // flag_royalflush = royal_flush(arr_id)
+    // if(!flag_royalflush){
+    //   flag_fiveofkind = five_kind(arr_id)
+    //   if(!flag_fiveofkind){
+    //     flag_straight_flush = straight_flush(arr_id)
+    //     if(!flag_straight_flush){
+    //       flag_fourofkind = fourofkind(arr_id,arr_val)
+    //       if(!flag_fourofkind){
+    //         flag_fullhouse = fullhouse(arr_id,arr_val)
+    //         if(!flag_fullhouse){
+    //           flag_flush = flush(arr_id,arr_val)
+    //           if(!flag_flush){
+    //             flag_straight = straight(arr_id)
+    //             if(!flag_straight){
+    //               flag_threeofkind = threeofkind(arr_id)
+    //               if(!flag_threeofkind){
+    //                 flag_twopair = twopair(arr_id,arr_val)
+    //                 if(!flag_twopair){
+    //                   acepair(arr_id)
+    //                 }
+    //               }
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+    // if(flag_win){
+    //   sound = 0;
+    //   win[sound].play();
+    // }
+    
+  }
+  function hitung_statuswinlose(data_array){
+    let flag_game = false;
+    let data_game_win = [];
+    let data_game_poin = 0;
+    // console.log("DATA ARRAY : ")
+    // console.log(data_array)
+    let [flag_acepair,data_win,poin_game] = twopair_factory(data_array)
+    // let [flag_acepair,data_win,poin_game] = acepair_factory(data_array)
+    flag_game = flag_acepair;
+    data_game_win = data_win;
+    data_game_poin = poin_game;
+    
+    
+    
+    return [flag_game,data_game_win,data_game_poin]
+  }
+  function twopair_factory(data_array){
+    let flag =false
+    let data_win = []
+    let counts = []
+    let obj = []
+    let data_result_id = []
+    let data_result = []
+    for(let i=0;i<data_array.length;i++){
+      if(counts[data_array[i].val]){
+        counts[data_array[i].val] += 1
+      }else{
+        counts[data_array[i].val] = 1
+      }
+    }
+   
+    let temp = [];
+    for(let prop in counts){
+      if (counts[prop] >= 2){
+            temp.push(prop + ":" + counts[prop])
+        }
+    }
+    let total = 0;
+    let total_temp = temp.length
+    let temp_string = ""
+    let temp_result;
+    console.log(temp)
+    for(let i=0;i<total_temp;i++){
+        temp_string = temp[i]
+        temp_result = temp_string.split(":");
+        obj["val"] = temp_result[0]
+        obj["count"] = temp_result[1]
+        for(let x=0;x<data_array.length;x++){
+          if(temp_result[0] == data_array[x].val){
+            data_result_id.push(data_array[x].id)
           }
+        }
+        obj["id"] = data_result_id
+        data_result.push(obj)
+        obj = []
+        data_result_id = []
+        total = total + parseInt(temp_result[1])
+    }
+    let flag_two = false
+    if(total_temp == 2){
+      if(total == 4 || total == 6){
+        for(let x=0;x<temp.length;x++){
+          temp_result = temp[x].split(":");
+          switch(temp_result[0]){
+            case "10":
+              flag_two = true;break;
+            case "J":
+              flag_two = true;break;
+            case "Q":
+              flag_two = true;break;
+            case "K":
+              flag_two = true;break;
+            case "AS":
+              flag_two = true;break;
+            case "JK":
+              flag_two = true;break;
+          }
+        }
+        if(flag_two){//2 PAIR
+          info_result = "2 PAIR"
+          info_card = temp
+          flag_win = true
+          flag = true
+
+          // for(let i in arr_id){
+          //   let temp_data = card_result_data.find(card => card.id == arr_id[i])
+          //   for(let x=0;x<info_card.length;x++){
+          //     temp_result = info_card[x].split(":");
+          //     if(temp_result[0] == temp_data.val){
+          //       obj["id"] = temp_data.id
+          //       obj["img"] = temp_data.img
+          //       info_card_win.push(obj)
+          //       obj = [];
+          //     }
+          //   }
+          // }
+          credit_animation(credit,8,totalbet)
         }
       }
     }
-    if(flag_win){
-      sound = 0;
-      win[sound].play();
+    return [flag,data_win,8]
+  }
+  function acepair_factory(data_array){
+    let flag_func = false
+    let data_win = []
+    let counts = []
+    for(let i=0;i<data_array.length;i++){
+      if(counts[data_array[i].val_display]){
+        counts[data_array[i].val_display] += 1
+      }else{
+        counts[data_array[i].val_display] = 1
+      }
     }
     
+    let temp = [];
+    for(let prop in counts){
+      if (counts[prop] >= 2){
+            temp.push(prop + ":" + counts[prop])
+        }
+    }
+    let total_as = 0;
+    let total_jk = 0;
+    let total_card = 0;
+    // console.log(temp)
+    if(temp.length > 0){
+      let temp_string = temp[0]
+      let temp_result = temp_string.split(":");
+      let total_temp = temp_result[1];
+      
+      for(let i=0;i<data_array.length;i++){
+          if(data_array[i].val_display == temp_result[0]){
+            data_win.push(data_array[i])
+          }
+      }
+      for(let i=0;i<data_win.length;i++){
+          if(data_win[i].val == "AS"){
+            total_as = total_as + 1;
+          }
+      }
+      
+      if(total_as == 2){ // 2 AS
+          info_result = "ACE PAIR"
+          info_card = temp
+          flag_win = true
+          // credit_animation(credit,9,totalbet)
+          flag_func = true;
+      }
+      
+    }else{
+      for(let i=0;i<data_array.length;i++){
+          if(data_array[i].val == "AS"){
+            total_as = total_as + 1;
+            data_win.push(data_array[i])
+          }
+          if(data_array[i].code_card == "JK"){
+            total_jk = total_jk + 1;
+            data_win.push(data_array[i])
+          }
+      }
+      total_card = total_as + total_jk
+  
+      if(total_card == 2){ // 1 as + 1 jk
+          info_result = "ACE PAIR"
+          info_card = temp
+          flag_win = true
+          // credit_animation(credit,9,totalbet)
+          flag_func = true;
+      }
+    }
+    // console.log(info_result)
+    return [flag_func,data_win,9]
   }
   function royal_flush(arr_id){
     let flag_func = false
@@ -1416,7 +1589,7 @@
   
   function shuffleArray_card(array){
     if(counter_putaran == 0){
-      let putaran = Math.round(parseInt(temp_credit)/parseInt(min_bet))
+      putaran = Math.round(parseInt(temp_credit)/parseInt(min_bet))
       let lose = 0.75
       let win = 0.25
       let lose_bet = putaran * lose
@@ -1447,9 +1620,13 @@
           return array;
       }
     }
-    // console.log(list_combine);
+    // console.log(putaran);
+    // console.log(counter_putaran);
+    // console.log(list_combine.length);
+    console.log(list_combine[counter_putaran]);
     // counter_putaran = counter_putaran + 1;
-
+    
+  
     let i = 0
     while(i<7){
       let randomNumber = Math.floor(Math.random() * array.length)
@@ -1460,9 +1637,11 @@
       }
     }
 
-    console.log(shuffleArray)
+    
+    
+    // console.log(shuffleArray)
 
-    // ==== ACE PAIR ===
+    // ==== ACE PAIR 1 AS AS===
     // shuffleArray = [];
     // shuffleArray.push(array[12]);
     // shuffleArray.push(array[25]);
@@ -1473,16 +1652,39 @@
     // shuffleArray.push(array[28]);
     // console.log(shuffleArray)
 
-    // ==== 2 PAIR ===
+    // ==== ACE PAIR 1 AS JK===
     // shuffleArray = [];
-    // shuffleArray.push(array[8]);
-    // shuffleArray.push(array[21]);
-    // shuffleArray.push(array[22]);
-    // shuffleArray.push(array[48]);
-    // shuffleArray.push(array[49]);
+    // shuffleArray.push(array[12]);
+    // shuffleArray.push(array[53]);
+    // shuffleArray.push(array[32]);
+    // shuffleArray.push(array[18]);
+    // shuffleArray.push(array[20]);
     // shuffleArray.push(array[30]);
     // shuffleArray.push(array[28]);
     // console.log(shuffleArray)
+    
+
+    // ==== 2 PAIR ===
+    shuffleArray = [];
+    shuffleArray.push(array[8]);
+    shuffleArray.push(array[21]);
+    shuffleArray.push(array[22]);
+    shuffleArray.push(array[48]);
+    shuffleArray.push(array[49]);
+    shuffleArray.push(array[30]);
+    shuffleArray.push(array[28]);
+    console.log(shuffleArray)
+
+
+    shuffleArray_fullbet()
+    let status = hitung_statuswinlose(shuffleArray)
+    console.log(status)
+    if(status[0]){
+      flag_win = status[0] 
+      sound = 0;
+      win[sound].play();
+      credit_animation_factory(credit,totalbet,status[1],status[2])
+    }
 
     // ==== 3 kind 1 ===
     // shuffleArray = [];
@@ -1795,9 +1997,8 @@
     c_after = credit;
     hitung(card_result_array_id,card_result_array_val);
   }
-  function credit_animation(credit_before,n,total_bet){
+  function credit_animation_factory(credit_before,total_bet,data_win,n){
     let point = (list_point[n].poin* total_bet)*parseInt(min_bet);
-    // console.log("POINT : " + point)
     point_result = "+" + point
     let credit_target = credit_before + ((list_point[n].poin* total_bet)*parseInt(min_bet))
     
@@ -1806,13 +2007,84 @@
     list_point_style = "bg-slate-500"
     list_point_id = list_point[n].id
 
+    c_before = credit;
+    credit = credit - (parseInt(min_bet) * totalbet);
+    c_after = credit;
 
+    card_result_0_class = "brightness-50"
+    card_result_1_class = "brightness-50"
+    card_result_2_class = "brightness-50"
+    card_result_3_class = "brightness-50"
+    card_result_4_class = "brightness-50"
+    card_result_5_class = "brightness-50"
+    card_result_6_class = "brightness-50"
+
+
+    for(let i=0;i<shuffleArray.length;i++){
+      let flag_data = true;
+      for(let j=0;j<data_win.length;j++){
+        if(shuffleArray[i].id == data_win[j].id){
+          flag_data = false
+          
+        }
+      }
+      switch(shuffleArray[i].id){
+        case card_result_0_id:
+          if(!flag_data){
+            card_result_0_class = ""
+          }
+          break;
+        case card_result_1_id:
+          if(!flag_data){
+            card_result_1_class = ""
+          }
+          break;
+        case card_result_2_id:
+          if(!flag_data){
+            card_result_2_class = ""
+          }
+          break;
+        case card_result_3_id:
+          if(!flag_data){
+            card_result_3_class = ""
+          }
+          break;
+        case card_result_4_id:
+          if(!flag_data){
+            card_result_4_class = ""
+          }
+          break;
+        case card_result_5_id:
+          if(!flag_data){
+            card_result_5_class = ""
+          }
+          break;
+        case card_result_6_id:
+          if(!flag_data){
+            card_result_6_class = ""
+          }
+          break;
+      }
+    }
+    
+    sendData(0,0,c_before,credit_target,point,0,info_result,shuffleArray,info_card_win,"WIN")
+
+    flag_all = false
+  }
+  function credit_animation(credit_before,n,total_bet){
+    let point = (list_point[n].poin* total_bet)*parseInt(min_bet);
+    point_result = "+" + point
+    let credit_target = credit_before + ((list_point[n].poin* total_bet)*parseInt(min_bet))
+    
+    animateValue(credit, credit_target, 500)
+    point_style_result = "text-secondary font-bold";
+    list_point_style = "bg-slate-500"
+    list_point_id = list_point[n].id
 
     c_before = credit;
     credit = credit - (parseInt(min_bet) * totalbet);
     c_after = credit;
 
-    
     card_result_0_class = "brightness-50"
     card_result_1_class = "brightness-50"
     card_result_2_class = "brightness-50"
@@ -1933,7 +2205,7 @@
 
     list_datasend.sort((a, b) => b.id_transaksi - a.id_transaksi);
 
-    console.log("LOSE :"+counter_lose+" -- WIN :"+counter_win)
+    // console.log("LOSE :"+counter_lose+" -- WIN :"+counter_win)
   }
   const handleInformation = () => {
       if(!flag_minimalbet){
