@@ -306,51 +306,7 @@
       factory_click("DEAL")
       
 	};
-  function hitung(arr_id,arr_val){
-    // let flag_royalflush = false
-    // let flag_fiveofkind = false
-    // let flag_straight_flush = false
-    // let flag_fourofkind = false
-    // let flag_fullhouse = false
-    // let flag_flush = false
-    // let flag_straight = false
-    // let flag_threeofkind = false
-    // let flag_twopair = false
-    
-    // flag_royalflush = royal_flush(arr_id)
-    // if(!flag_royalflush){
-    //   flag_fiveofkind = five_kind(arr_id)
-    //   if(!flag_fiveofkind){
-    //     flag_straight_flush = straight_flush(arr_id)
-    //     if(!flag_straight_flush){
-    //       flag_fourofkind = fourofkind(arr_id,arr_val)
-    //       if(!flag_fourofkind){
-    //         flag_fullhouse = fullhouse(arr_id,arr_val)
-    //         if(!flag_fullhouse){
-    //           flag_flush = flush(arr_id,arr_val)
-    //           if(!flag_flush){
-    //             flag_straight = straight(arr_id)
-    //             if(!flag_straight){
-    //               flag_threeofkind = threeofkind(arr_id)
-    //               if(!flag_threeofkind){
-    //                 flag_twopair = twopair(arr_id,arr_val)
-    //                 if(!flag_twopair){
-    //                   acepair(arr_id)
-    //                 }
-    //               }
-    //             }
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
-    // if(flag_win){
-    //   sound = 0;
-    //   win[sound].play();
-    // }
-    
-  }
+ 
   function hitung_statuswinlose(data_array){
     let data_result = [];
    
@@ -1082,7 +1038,6 @@
               }
             }
           }
-          // credit_animation(credit,8,totalbet)
         }
       }
     }
@@ -1598,6 +1553,63 @@
     // credit = credit - (parseInt(min_bet) * totalbet);
     // c_after = credit;
   }
+  function card_random(size){
+    
+    shuffleArray = []
+    let temp_data = [];
+    let temp_data2 = [];
+    for(let i=0;i<card_result_data.length;i++){
+      if(card_result_data[i].val == "AS" || card_result_data[i].val == "JK"){
+        temp_data.push(card_result_data[i])
+      }
+    }
+    
+    let x = 0
+    let usedIndexes2 = [];
+    while(x<2){
+      let randomNumber = Math.floor(Math.random() * temp_data.length)
+      if(!usedIndexes2.includes(randomNumber)){
+        temp_data2.push(temp_data[randomNumber]);
+        usedIndexes2.push(randomNumber);
+        x++;
+      }
+    }  
+
+ 
+    console.log(temp_data2);
+
+    let temp_card_random = [];
+    usedIndexes = [];
+    let i = 0
+    while(i<5){
+      let randomNumber = Math.floor(Math.random() * card_result_data.length)
+      if(!usedIndexes.includes(randomNumber)){
+        if(card_result_data[randomNumber].val != "AS" && card_result_data[randomNumber].val != "JK"){
+          temp_card_random.push(card_result_data[randomNumber]);
+          usedIndexes.push(randomNumber);
+          i++;
+        }
+      }
+    }  
+    let temp_combine=temp_data2.concat(temp_card_random)
+    // shuffleArray=temp_data2.concat(temp_card_random)
+    console.log("total combine : "+temp_combine.length)
+
+    x = 0
+    usedIndexes2 = [];
+    while(x<temp_combine.length){
+      let randomNumber = Math.floor(Math.random() * temp_combine.length)
+      if(!usedIndexes2.includes(randomNumber)){
+        shuffleArray.push(temp_combine[randomNumber]);
+        usedIndexes2.push(randomNumber);
+        x++;
+      }
+    }  
+
+
+    shuffleArray_fullbet()
+    console.log(shuffleArray);
+  }
   function credit_animation_factory(credit_before,total_bet,data_win,n){
     let point = (list_point[n].poin* total_bet)*parseInt(min_bet);
     point_result = "+" + point
@@ -1932,6 +1944,12 @@
     </div>
   </section>
  
+  <section class="grid grid-cols-5 gap-1 mt-2">
+    <button on:click={() => {
+      card_random(5);
+    }} class="btn btn-success btn-md w-full ">Ace Pair</button>
+  </section>
+
 </main>
 
 <footer class="footer footer-center p-4 text-base-content mt-2 text-center select-none">
