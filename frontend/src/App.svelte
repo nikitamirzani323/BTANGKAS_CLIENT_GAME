@@ -118,8 +118,8 @@
   let putaran = 0;
   let counter_putaran = 0;
   let counter_transaksi = 0;
-  let counter_lose = 0;
-  let counter_win = 0;
+  let sum_lose = 0;
+  let sum_win = 0;
   let c_before = 0;
   let c_after = 0;
   let flag_all = true
@@ -910,7 +910,6 @@
             }
             break;
           case 8:
-            console.log(pattern_stright_9)
             for(let t=0;t<pattern_stright_9.length;t++){
               let temp_data = data_array.find(card => card.val_display == pattern_stright_9[t])
               if(temp_data != undefined){
@@ -1202,15 +1201,17 @@
     
     if(flag_hitung){
       let status = hitung_statuswinlose(shuffleArray)
-      console.log(status)
+      // console.log(status)
       if(status[0]){
         flag_win = status[0] 
         sound = 0;
         win[sound].play();
-        console.log(status[1])
+        // console.log(status[1])
         credit_animation_factory(credit,totalbet,status[1],status[2])
       }else{
-        sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
+        if(e != "DEAL"){
+          sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
+        }
       }
     }else{
       sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
@@ -1593,9 +1594,9 @@
     card_result_array_val.push(card_result_6_val)
     
     
-    c_before = credit;
-    credit = credit - (parseInt(min_bet) * totalbet);
-    c_after = credit;
+    // c_before = credit;
+    // credit = credit - (parseInt(min_bet) * totalbet);
+    // c_after = credit;
   }
   function credit_animation_factory(credit_before,total_bet,data_win,n){
     let point = (list_point[n].poin* total_bet)*parseInt(min_bet);
@@ -1619,8 +1620,7 @@
     card_result_5_class = "brightness-50"
     card_result_6_class = "brightness-50"
 
-    // console.log("data win :")
-    // console.log(data_win)
+   
     for(let i=0;i<shuffleArray.length;i++){
       let flag_data = true;
       for(let j=0;j<data_win.length;j++){
@@ -1668,82 +1668,11 @@
       }
     }
     
-    sendData(0,0,c_before,credit_target,point,0,info_result,shuffleArray,info_card_win,"WIN")
+    sendData(0,0,c_before,credit_target,point,0,info_result,shuffleArray,data_win,"WIN")
 
     flag_all = false
   }
-  function credit_animation(credit_before,n,total_bet){
-    let point = (list_point[n].poin* total_bet)*parseInt(min_bet);
-    point_result = "+" + point
-    let credit_target = credit_before + ((list_point[n].poin* total_bet)*parseInt(min_bet))
-    
-    animateValue(credit, credit_target, 500)
-    point_style_result = "text-secondary font-bold";
-    list_point_style = "bg-slate-500"
-    list_point_id = list_point[n].id
-
-    c_before = credit;
-    credit = credit - (parseInt(min_bet) * totalbet);
-    c_after = credit;
-
-    card_result_0_class = "brightness-50"
-    card_result_1_class = "brightness-50"
-    card_result_2_class = "brightness-50"
-    card_result_3_class = "brightness-50"
-    card_result_4_class = "brightness-50"
-    card_result_5_class = "brightness-50"
-    card_result_6_class = "brightness-50"
-
-    for(let i=0;i<shuffleArray.length;i++){
-      let flag_data = true;
-      for(let j=0;j<info_card_win.length;j++){
-        if(shuffleArray[i].id == info_card_win[j].id){
-          flag_data = false
-        }
-      }
-      switch(shuffleArray[i].id){
-        case card_result_0_id:
-          if(!flag_data){
-            card_result_0_class = ""
-          }
-          break;
-        case card_result_1_id:
-          if(!flag_data){
-            card_result_1_class = ""
-          }
-          break;
-        case card_result_2_id:
-          if(!flag_data){
-            card_result_2_class = ""
-          }
-          break;
-        case card_result_3_id:
-          if(!flag_data){
-            card_result_3_class = ""
-          }
-          break;
-        case card_result_4_id:
-          if(!flag_data){
-            card_result_4_class = ""
-          }
-          break;
-        case card_result_5_id:
-          if(!flag_data){
-            card_result_5_class = ""
-          }
-          break;
-        case card_result_6_id:
-          if(!flag_data){
-            card_result_6_class = ""
-          }
-          break;
-      }
-    }
-    
-    sendData(0,0,c_before,credit_target,point,0,info_result,shuffleArray,info_card_win,"WIN")
-
-    flag_all = false
-  }
+ 
   function animateValue(start, end, duration) {
     // assumes integer values for start and end
     
@@ -1780,10 +1709,10 @@
     let status_css = "";
     if(data_statustransaksi == "LOSE"){
       status_css = "bg-error text-white";
-      counter_lose = counter_lose + 1;
+      sum_lose = sum_lose + (parseInt(data_roundbet) * parseInt(data_minbet));
     }else{
       status_css = "bg-success text-black";
-      counter_win = counter_win + 1;
+      sum_win = sum_win + parseInt(data_win);
     }
     counter_transaksi = counter_transaksi + 1
     const objSend = {
@@ -1806,7 +1735,7 @@
 
     list_datasend.sort((a, b) => b.id_transaksi - a.id_transaksi);
 
-    // console.log("LOSE :"+counter_lose+" -- WIN :"+counter_win)
+    console.log("LOSE :"+sum_lose+" -- WIN :"+sum_win)
   }
   const handleInformation = () => {
       if(!flag_minimalbet){
