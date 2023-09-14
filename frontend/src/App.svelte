@@ -1553,8 +1553,8 @@
     // credit = credit - (parseInt(min_bet) * totalbet);
     // c_after = credit;
   }
-  function card_random(size){
-    
+  
+  function factory_acepair(){
     shuffleArray = []
     let temp_data = [];
     let temp_data2 = [];
@@ -1563,7 +1563,6 @@
         temp_data.push(card_result_data[i])
       }
     }
-    
     let x = 0
     let usedIndexes2 = [];
     while(x<2){
@@ -1575,40 +1574,62 @@
       }
     }  
 
- 
-    console.log(temp_data2);
-
-    let temp_card_random = [];
+    let flag = false
     usedIndexes = [];
-    let i = 0
-    while(i<5){
-      let randomNumber = Math.floor(Math.random() * card_result_data.length)
-      if(!usedIndexes.includes(randomNumber)){
-        if(card_result_data[randomNumber].val != "AS" && card_result_data[randomNumber].val != "JK"){
-          temp_card_random.push(card_result_data[randomNumber]);
-          usedIndexes.push(randomNumber);
-          i++;
+    let temp_combine = []
+    let n_looping = 0;
+    do{
+      temp_combine = [];
+      console.log(flag)
+      let temp_card_random = [];
+      let i = 0
+      while(i<5){
+        let randomNumber = Math.floor(Math.random() * card_result_data.length)
+        if(!usedIndexes.includes(randomNumber)){
+          if(card_result_data[randomNumber].val != "AS" && card_result_data[randomNumber].val != "JK"){
+            if(card_result_data[randomNumber].val != "K" && card_result_data[randomNumber].val != "Q"){
+              if(card_result_data[randomNumber].val != "J" && card_result_data[randomNumber].val != "10"){
+                temp_card_random.push(card_result_data[randomNumber]);
+                usedIndexes.push(randomNumber);
+                i++;
+              }
+            }
+          }
+        }
+      }  
+      temp_combine=temp_data2.concat(temp_card_random)
+      console.log(temp_combine)
+      let status = hitung_statuswinlose(temp_combine)
+      if(status[0]){
+        if(status[2]==9){
+          flag = true;
+          flag_win = status[0] 
+          sound = 0;
+          win[sound].play();
+          console.log(status)
         }
       }
-    }  
-    let temp_combine=temp_data2.concat(temp_card_random)
-    // shuffleArray=temp_data2.concat(temp_card_random)
-    console.log("total combine : "+temp_combine.length)
-
-    x = 0
-    usedIndexes2 = [];
-    while(x<temp_combine.length){
-      let randomNumber = Math.floor(Math.random() * temp_combine.length)
-      if(!usedIndexes2.includes(randomNumber)){
-        shuffleArray.push(temp_combine[randomNumber]);
-        usedIndexes2.push(randomNumber);
-        x++;
+      n_looping = n_looping + 1
+      if(n_looping == 10){
+        flag = true;
       }
-    }  
+      console.log(flag + " "+n_looping)
+    }while(!flag)
+      
+      
+      x = 0
+      usedIndexes2 = [];
+      while(x<temp_combine.length){
+        let randomNumber = Math.floor(Math.random() * temp_combine.length)
+        if(!usedIndexes2.includes(randomNumber)){
+          shuffleArray.push(temp_combine[randomNumber]);
+          usedIndexes2.push(randomNumber);
+          x++;
+        }
+      }  
 
-
+     
     shuffleArray_fullbet()
-    console.log(shuffleArray);
   }
   function credit_animation_factory(credit_before,total_bet,data_win,n){
     let point = (list_point[n].poin* total_bet)*parseInt(min_bet);
@@ -1907,6 +1928,13 @@
       </div>
     </div>
   </section>
+  <section class="w-full justify-center mt-5">
+    [
+      {#each shuffleArray as rec}
+        {rec.id},
+      {/each}
+    ]
+  </section>
   <section class="flex flex-col lg:flex-row w-full mt-5 gap-2">
     <div class="flex w-full p-0 justify-center lg:justify-end">
       <div class="flex flex-col w-1/3 ">
@@ -1946,7 +1974,7 @@
  
   <section class="grid grid-cols-5 gap-1 mt-2">
     <button on:click={() => {
-      card_random(5);
+      factory_acepair();
     }} class="btn btn-success btn-md w-full ">Ace Pair</button>
   </section>
 
