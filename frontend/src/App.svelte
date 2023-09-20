@@ -1024,6 +1024,7 @@
               flag_two = true;break;
           }
         }
+        
         if(flag_two){//2 PAIR
           info_result = "2 PAIR"
           info_card = temp
@@ -1228,6 +1229,17 @@
     // shuffleArray.push(array[49]);
     // shuffleArray.push(array[30]);
     // shuffleArray.push(array[28]);
+    // console.log(shuffleArray)
+
+    // ==== 2 PAIR 1 ===
+    // shuffleArray = [];
+    // shuffleArray.push(array[25]);
+    // shuffleArray.push(array[48]);
+    // shuffleArray.push(array[13]);
+    // shuffleArray.push(array[29]);
+    // shuffleArray.push(array[24]);
+    // shuffleArray.push(array[51]);
+    // shuffleArray.push(array[16]);
     // console.log(shuffleArray)
 
    
@@ -1554,83 +1566,7 @@
     // c_after = credit;
   }
   
-  function factory_acepair(){
-    shuffleArray = []
-    let temp_data = [];
-    let temp_data2 = [];
-    for(let i=0;i<card_result_data.length;i++){
-      if(card_result_data[i].val == "AS" || card_result_data[i].val == "JK"){
-        temp_data.push(card_result_data[i])
-      }
-    }
-    let x = 0
-    let usedIndexes2 = [];
-    while(x<2){
-      let randomNumber = Math.floor(Math.random() * temp_data.length)
-      if(!usedIndexes2.includes(randomNumber)){
-        temp_data2.push(temp_data[randomNumber]);
-        usedIndexes2.push(randomNumber);
-        x++;
-      }
-    }  
-
-    let flag = false
-    usedIndexes = [];
-    let temp_combine = []
-    let n_looping = 0;
-    do{
-      temp_combine = [];
-      console.log(flag)
-      let temp_card_random = [];
-      let i = 0
-      while(i<5){
-        let randomNumber = Math.floor(Math.random() * card_result_data.length)
-        if(!usedIndexes.includes(randomNumber)){
-          if(card_result_data[randomNumber].val != "AS" && card_result_data[randomNumber].val != "JK"){
-            if(card_result_data[randomNumber].val != "K" && card_result_data[randomNumber].val != "Q"){
-              if(card_result_data[randomNumber].val != "J" && card_result_data[randomNumber].val != "10"){
-                temp_card_random.push(card_result_data[randomNumber]);
-                usedIndexes.push(randomNumber);
-                i++;
-              }
-            }
-          }
-        }
-      }  
-      temp_combine=temp_data2.concat(temp_card_random)
-      console.log(temp_combine)
-      let status = hitung_statuswinlose(temp_combine)
-      if(status[0]){
-        if(status[2]==9){
-          flag = true;
-          flag_win = status[0] 
-          sound = 0;
-          win[sound].play();
-          console.log(status)
-        }
-      }
-      n_looping = n_looping + 1
-      if(n_looping == 10){
-        flag = true;
-      }
-      console.log(flag + " "+n_looping)
-    }while(!flag)
-      
-      
-      x = 0
-      usedIndexes2 = [];
-      while(x<temp_combine.length){
-        let randomNumber = Math.floor(Math.random() * temp_combine.length)
-        if(!usedIndexes2.includes(randomNumber)){
-          shuffleArray.push(temp_combine[randomNumber]);
-          usedIndexes2.push(randomNumber);
-          x++;
-        }
-      }  
-
-     
-    shuffleArray_fullbet()
-  }
+  
   function credit_animation_factory(credit_before,total_bet,data_win,n){
     let point = (list_point[n].poin* total_bet)*parseInt(min_bet);
     point_result = "+" + point
@@ -1972,11 +1908,7 @@
     </div>
   </section>
  
-  <section class="grid grid-cols-5 gap-1 mt-2">
-    <button on:click={() => {
-      factory_acepair();
-    }} class="btn btn-success btn-md w-full ">Ace Pair</button>
-  </section>
+
 
 </main>
 
@@ -2060,11 +1992,39 @@
 
 <input type="checkbox" id="my-modal-carabermain" class="modal-toggle" bind:checked={isModal_carabermain}>
 <div class="modal" on:click|self={()=>isModal_carabermain = false}>
-  <div class="modal-box relative select-none  lg:max-w-4xl h-full lg:max-h-[600px] rounded-none lg:rounded-lg p-2 lg:p-4 overflow-hidden">
+  <div class="modal-box relative select-none  lg:max-w-2xl h-full lg:max-h-[600px] rounded-none lg:rounded-lg p-2 lg:p-4 overflow-hidden">
     <label for="my-modal-carabermain" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
     <h3 class="text-xs lg:text-sm font-bold -mt-1">CARA BERMAIN</h3>
     <div class="overflow-auto h-[90%] scrollbar-thin scrollbar-thumb-green-100 mt-4">
-        
+        <p>
+          Mickey Mouse Bolatangkas adalah permainan dengan menggunakan tujuh buah kartu yang akan dibagikan secara random pada setiap putaran permainan 
+          sehingga pemain bisa mendapatkan susunan kartu yang ditentukan dan tertinggi untuk mencapai kemenangan. sebelum bermain silahkan login dan masuk ke 
+          permainan Mickey Mouse Bolatangkas terlebih dahulu.<br />
+          Ini adalah tampilan tab Mickey Mouse Bolatangkas. Berikut beberapa tombol/panel yang wajib anda ketahui<br />
+
+          Setting, pilih tombol ini jika anda ingin mengubah pengaturan Game<br />
+          Info Panel, disini anda bisa melihat info user id, jumlah koin anda, nomor meja.<br />
+          Coin in, klik untuk menambahkan koin ke credit anda<br />
+          Coin out, klik untuk memindahkan koin dari credit ke dompet anda<br />
+          Fullhouse, klik untuk mengubah pilihan fullhouse anda<br />
+          Info bet<br />
+          Reward info<br />
+          Klik untuk memilih room permainan, setiap room memiliki jumlah taruhan yang berbeda<br />
+          Open, klik untuk membuka kartu<br />
+          Fold, klik untung membuang kartu<br /><br />
+          Sesuai dengan nilai kartu yang didapatkan apabila pemain menang berikut adalah susunan set kartu dari yang terkecil hingga yang tertinggi
+          <br /><br />
+          royal flush : kombinasi dari kartu ace, king, queen, jack, dan 10 dengan jenis yang sama<br />
+          5 of a kind : kombinasi dari four of a kind dan kartu joker<br />
+          straight flush : kombinasi dari straight dan flush<br />
+          4 of a kind : kombinasi dari 4 kartu yang sama<br />
+          full house : kombinasi dari 3 kartu dan 2 kartu yang sama<br />
+          flush : kombinasi dari 5 kartu yang memiliki jenis yang sama<br />
+          straight : kombinasi 5 kartu yang berurutan<br />
+          3 of a kind : kombinasi dari 3 kartu yang sama<br />
+          2 pair ( 10 pair ) : kombinasi dari 2 pasang kartu yang sama dengan catatan nilai kartu diatas 10<br />
+          ace pair : kombinasi dari 2 kartu ace yang sama<br />
+        </p>
     </div>
   </div>
 </div>
