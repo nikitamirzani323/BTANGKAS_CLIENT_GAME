@@ -5,8 +5,21 @@
   
   dayjs.extend(utc);
   dayjs.extend(timezone);
-  let client_ipaddress = "123.456.234.123";
-  let client_timezone = "Asia/Jakarta";
+  export let path_api = "";
+  export let version = "";
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const token_browser = urlParams.get("token");
+ 
+  if (token_browser === null) {
+    console.log("TOKEN NOT FOUND");
+  } else {
+    initTimezone();
+  }
+  let client_ipaddress = "0.0.0.0";
+  let client_timezone = "";
+  let client_company = "";
+  let client_name = "";
   let clockmachine = "";
   let clockmachine_data = "";
   let credit = 50000;
@@ -1415,6 +1428,7 @@
     // shuffleArray.push(array[29]);
     // console.log(shuffleArray)
 
+    console.log(shuffleArray)
   }
   function shuffleArray_bet(){
     if(count_bet == 4){
@@ -1728,6 +1742,44 @@
   const call_carabermain = () => {
     isModal_carabermain = true
 	};
+  async function initTimezone() {
+    const res = await fetch(path_api+"api/healthz");
+    if (!res.ok) {
+      const message = `An error has occured: ${res.status}`;
+      throw new Error(message);
+    } else {
+      const json = await res.json();
+      client_ipaddress = json.real_ip;
+      client_timezone = "Asia/Jakarta";
+    }
+    initapp(token_browser);
+  }
+  
+  async function initapp(token) {
+      const res = await fetch(path_api+"api/checktoken", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            client_token: token,
+          }),
+      });
+      const json = await res.json();
+      if (json.status === 400) {
+          // logout();
+      } else if (json.status == 403) {
+          alert(json.message);
+      } else {
+        console.log(json)
+          // akses_page = true;
+          // initHome();
+          client_company = json.client_company;
+          client_name = json.client_name;
+          credit = json.client_credit;
+          console.log(credit);
+      }
+  }
 </script>
 
 <main class="container mx-auto px-2 text-base-content glass xl:rounded-box xl:mt-7 max-w-screen-xl bg-opacity-60 pb-5 h-fit lg:h-full">
@@ -1753,7 +1805,7 @@
             <p class="w-full text-xs lg:text-sm text-right select-none">
               Asia/Jakarta <br />
               {clockmachine}  WIB (+7)<br>
-              developer <br />
+              {client_name} <br />
               {client_ipaddress}
             </p>
             <div class="w-full text-xs lg:text-sm text-right select-none">
@@ -1864,13 +1916,7 @@
       </div>
     </div>
   </section>
-  <section class="w-full justify-center mt-5">
-    [
-      {#each shuffleArray as rec}
-        {rec.id},
-      {/each}
-    ]
-  </section>
+ 
   <section class="flex flex-col lg:flex-row w-full mt-5 gap-2">
     <div class="flex w-full p-0 justify-center lg:justify-end">
       <div class="flex flex-col w-1/3 ">
@@ -1915,7 +1961,7 @@
 <footer class="footer footer-center p-4 text-base-content mt-2 text-center select-none">
   <div class="grid">
     <p class="text-xs lg:text-sm text-center">
-      0.0.1
+      {version}
       <br />
       PowerBy
     </p>

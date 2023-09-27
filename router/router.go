@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/nikitamirzani323/btangkas-client/controller"
 )
 
 func Init() *fiber.App {
@@ -18,5 +19,7 @@ func Init() *fiber.App {
 		ByteRange: true,
 		Browse:    true,
 	})
+	app.Get("api/healthz", controller.HealthCheck)
+	app.Post("api/checktoken", controller.CheckToken)
 	return app
 }
