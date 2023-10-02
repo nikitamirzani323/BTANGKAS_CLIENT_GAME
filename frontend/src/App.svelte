@@ -17,9 +17,8 @@
   let client_ipaddress = "0.0.0.0";
   let client_timezone = "";
   let client_company = "";
+  let client_username = "";
   let client_name = "";
-  let clockmachine = "";
-  let clockmachine_data = "";
 
   const card_result_data = [
     {id:"2_diamond",val:"2",val_display:2,code_card:"D",img:"./CARD/WHITE/CARD_RED_DIAMOND_2.png"},
@@ -112,6 +111,7 @@
           flag_game = true;
           client_company = json.client_company;
           client_name = json.client_name;
+          client_username = json.client_username;
           client_credit = json.client_credit;
           console.log(client_credit);
       }
@@ -125,6 +125,7 @@
     {client_company} 
     {client_timezone} 
     {client_ipaddress} 
+    {client_username} 
     {client_name} 
     {client_credit} />
   {/if}

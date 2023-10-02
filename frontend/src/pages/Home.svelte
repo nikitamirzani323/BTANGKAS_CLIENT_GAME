@@ -10,6 +10,7 @@
     export let client_timezone = "";
     export let client_ipaddress = "";
     export let client_name = "";
+    export let client_username = "";
     export let client_credit = 0;
   
    
@@ -225,7 +226,7 @@
       list_detailtransaksi = []
       list_detailtransaksi_win = []
       list_detailtransaksi_notewin = ""
-      };
+    };
     const call_bet = () => {
       flag_minimalbet = true;
       if(parseInt(min_bet) > 0){
@@ -280,7 +281,7 @@
         alert("Please choose minimal bet")
         flag_minimalbet = false;
       }
-      };
+    };
     const call_fullbet = () => {
       flag_minimalbet = true;
       if(parseInt(min_bet) > 0){
@@ -1710,7 +1711,7 @@
       list_datasend = [...list_datasend,objSend]
   
       list_datasend.sort((a, b) => b.id_transaksi - a.id_transaksi);
-  
+      savetransaksi(data_roundbet,data_minbet,data_cbefore,data_cafter,data_win,code_win,data_statustransaksi)
       console.log("LOSE :"+sum_lose+" -- WIN :"+sum_win)
     }
     const handleInformation = () => {
@@ -1734,8 +1735,34 @@
       };
     const call_carabermain = () => {
       isModal_carabermain = true
-      };
-    
+    };
+    async function savetransaksi(c_roundbet,c_bet,c_before,c_after,c_win,c_idpoin,c_status) {
+      const res = await fetch(path_api+"api/savetransaksi", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            transaksi_company: client_company,
+            transaksi_username: client_username,
+            transaksi_roundbet: parseInt(c_roundbet),
+            transaksi_bet: parseInt(c_bet),
+            transaksi_cbefore: parseInt(c_before),
+            transaksi_cafter: parseInt(c_after),
+            transaksi_win: parseInt(c_win),
+            transaksi_idpoin: parseInt(c_idpoin),
+            transaksi_status: c_status,
+          }),
+      });
+      const json = await res.json();
+      if (json.status === 400) {
+          // logout();
+      } else if (json.status == 403) {
+          alert(json.message);
+      } else {
+        console.log(json)
+      }
+  }
     
     
   </script>
@@ -1880,7 +1907,7 @@
         <div class="flex flex-col w-1/3 ">
           <span class="text-sm lg:text-lg w-full text-center select-none">Minimal Bet</span>
           <div class=" bg-base-300 text-lg p-2 w-full cursor-pointer text-center rounded-lg" on:click={() => {
-            handleInformation();
+              handleInformation();
             }}>
             <span class="text-center link-accent select-none">{new Intl.NumberFormat().format(min_bet)}</span>
           </div>
