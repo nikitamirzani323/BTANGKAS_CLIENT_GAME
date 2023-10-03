@@ -22,6 +22,7 @@
     let temp_credit = credit;
     let list_min_bet = [100,500,1000,1500,5000,10000,25000]
     let idtransaksi = ""
+    let tipe_click = ""
     let min_bet = "0"
     let totalbet = 0
     let sound = 0;
@@ -193,6 +194,7 @@
     }
     const call_play = () => {
       idtransaksi = "";
+      tipe_click = "";
       flag_minimalbet = false;
       c_before = 0;
       c_after = 0;
@@ -316,7 +318,7 @@
         alert("Please choose minimal bet")
         flag_minimalbet = false;
       }
-      };
+    };
     const call_deal = () => {
         count_bet = 4
         sound = 0;
@@ -1140,6 +1142,8 @@
       return arr_1.every((val) => arr_2.includes(val))
     }
     function factory_click(e){
+      tipe_click = e
+      console.log("TIPE CLICK :" + tipe_click)
       let flag_hitung = true;
       if(e != "DEAL"){
         switch(count_bet){
@@ -1158,12 +1162,13 @@
             break;
           case 4:
             if(e=="FULL_BET"){
-              shuffleArray_card(card_result_data)
-              shuffleArray_fullbet()
+              // shuffleArray_card(card_result_data)
+              // shuffleArray_fullbet()
             }else{
               shuffleArray_bet()
             }
-            flag_hitung = true;
+            
+            flag_hitung = false;
             
             break;
         }
@@ -1174,25 +1179,34 @@
       
       
       if(flag_hitung){
+        console.log("TOTAL CARD : "+shuffleArray.length)
+        if(shuffleArray.length > 0){
+          hitung_rumus(e)
+        }
+      }else{
+        sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
+      }
+    }
+    function hitung_rumus(tipe_data){
+        console.log("HITUNG RUMUS")
+        
         let status = hitung_statuswinlose(shuffleArray)
-        // console.log(status)
+        console.log("STATUS HITUNG :" + JSON.stringify(status))
+        console.log("CARD :" + JSON.stringify(shuffleArray))
         if(status[0]){
           flag_win = status[0] 
           sound = 0;
           win[sound].play();
           // console.log(status[1])
-          if(e != "DEAL"){
-            sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
-          }
+          // if(tipe_data != "DEAL"){
+          //   // sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
+          // }
           credit_animation_factory(credit,totalbet,status[1],status[2])
         }else{
-          if(e != "DEAL"){
-            sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
-          }
+          // if(tipe_data != "DEAL"){
+          //   sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
+          // }
         }
-      }else{
-        sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
-      }
     }
     function shuffleArray_card(array){
       let i = 0
@@ -1538,7 +1552,7 @@
       card_result_array_val.push(card_result_4_val)
       card_result_array_val.push(card_result_5_val)
       card_result_array_val.push(card_result_6_val)
-     }
+    }
     function shuffleArray_deal(){
       if(count_bet == 4){
         flag_bet = false
@@ -1748,10 +1762,10 @@
           savetransaksidetail(idtransaksi,data_roundbet,data_minbet,data_cbefore,data_cafter,data_win,code_win,resultwin,data_statustransaksi)
         }
       }else{
-        if(idtransaksi != "" || idtransaksi==null || idtransaksi!= undefined){
-          savetransaksidetail(idtransaksi,data_roundbet,data_minbet,data_cbefore,data_cafter,data_win,code_win,resultwin,data_statustransaksi)
+        if(idtransaksi == ""){
+          savetransaksi(data_roundbet,data_minbet,data_cbefore,data_cafter,data_win,code_win,resultwin,data_statustransaksi)
         }else{
-          alert("Error kartu tidak bisa dibuka")
+          savetransaksidetail(idtransaksi,data_roundbet,data_minbet,data_cbefore,data_cafter,data_win,code_win,resultwin,data_statustransaksi)
         }
         
       }
@@ -1813,8 +1827,19 @@
         for(let i = 0; i < myArray.length; i++) {
           shuffleArray.push(card_result_data[myArray[i]]);
         }
-        // console.log("CARD " + JSON.stringify(shuffleArray))
-        shuffleArray_bet()
+        
+        if(c_roundbet == 4){
+          console.log("TOTAL CARD : "+shuffleArray.length)
+          hitung_rumus(tipe_click)
+        }else{
+          if(tipe_click == "FULL_BET") {
+            shuffleArray_fullbet()
+          }else{
+            shuffleArray_bet()
+          }
+        }
+
+        
         flag_all = true;
       }
     }
@@ -1845,7 +1870,11 @@
           alert(json.message);
       } else {
         console.log(json)
-        shuffleArray_bet()
+        if(tipe_click == "FULL_BET") {
+          shuffleArray_fullbet()
+        }else{
+          shuffleArray_bet()
+        }
         flag_all = true;
       }
     }
