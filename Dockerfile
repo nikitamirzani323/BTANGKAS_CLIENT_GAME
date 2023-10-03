@@ -26,5 +26,6 @@ FROM alpine:latest as totosvelterelease
 WORKDIR /app
 COPY --from=totosveltebuilder /svelteapp/dist ./frontend/dist
 COPY --from=totobuild /go/src/bitbucket.org/isbtotogroup/frontend_svelte/app .
+COPY --from=totobuild /go/src/bitbucket.org/isbtotogroup/frontend_svelte/env-sample /app/.env
 EXPOSE 2116
 CMD ["./app"]

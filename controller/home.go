@@ -10,11 +10,12 @@ import (
 )
 
 type responsechecktoken struct {
-	Client_status    int    `json:"status"`
-	Client_idcompany string `json:"client_idcompany"`
-	Client_name      string `json:"client_name"`
-	Client_username  string `json:"client_username"`
-	Client_credit    int    `json:"client_credit"`
+	Client_status    int         `json:"status"`
+	Client_idcompany string      `json:"client_idcompany"`
+	Client_name      string      `json:"client_name"`
+	Client_username  string      `json:"client_username"`
+	Client_credit    int         `json:"client_credit"`
+	Client_listbet   interface{} `json:"client_listbet"`
 }
 type responsesavetransaksi struct {
 	Client_status      int    `json:"status"`
@@ -80,6 +81,7 @@ func CheckToken(c *fiber.Ctx) error {
 			"client_username": result.Client_username,
 			"client_credit":   result.Client_credit,
 			"client_company":  result.Client_idcompany,
+			"client_listbet":  result.Client_listbet,
 			"time":            time.Since(render_page).String(),
 		})
 	} else {
@@ -93,15 +95,16 @@ func CheckToken(c *fiber.Ctx) error {
 }
 func SaveTransaksi(c *fiber.Ctx) error {
 	type payload_savetransaksi struct {
-		Transaksi_company  string `json:"transaksi_company" `
-		Transaksi_username string `json:"transaksi_username" `
-		Transaksi_roundbet int    `json:"transaksi_roundbet" `
-		Transaksi_bet      int    `json:"transaksi_bet" `
-		Transaksi_cbefore  int    `json:"transaksi_cbefore" `
-		Transaksi_cafter   int    `json:"transaksi_cafter" `
-		Transaksi_win      int    `json:"transaksi_win" `
-		Transaksi_idpoin   int    `json:"transaksi_idpoin" `
-		Transaksi_status   string `json:"transaksi_status" `
+		Transaksi_company       string `json:"transaksi_company" `
+		Transaksi_username      string `json:"transaksi_username" `
+		Transaksi_roundbet      int    `json:"transaksi_roundbet" `
+		Transaksi_bet           int    `json:"transaksi_bet" `
+		Transaksi_cbefore       int    `json:"transaksi_cbefore" `
+		Transaksi_cafter        int    `json:"transaksi_cafter" `
+		Transaksi_win           int    `json:"transaksi_win" `
+		Transaksi_idpoin        int    `json:"transaksi_idpoin" `
+		Transaksi_resultcardwin string `json:"transaksi_resultcardwin" `
+		Transaksi_status        string `json:"transaksi_status" `
 	}
 	hostname := c.Hostname()
 	client := new(payload_savetransaksi)
@@ -122,15 +125,16 @@ func SaveTransaksi(c *fiber.Ctx) error {
 		SetError(responseerror{}).
 		SetHeader("Content-Type", "application/json").
 		SetBody(map[string]interface{}{
-			"transaksi_company":  client.Transaksi_company,
-			"transaksi_username": client.Transaksi_username,
-			"transaksi_roundbet": client.Transaksi_roundbet,
-			"transaksi_bet":      client.Transaksi_bet,
-			"transaksi_cbefore":  client.Transaksi_cbefore,
-			"transaksi_cafter":   client.Transaksi_cafter,
-			"transaksi_win":      client.Transaksi_win,
-			"transaksi_idpoin":   client.Transaksi_idpoin,
-			"transaksi_status":   client.Transaksi_status,
+			"transaksi_company":       client.Transaksi_company,
+			"transaksi_username":      client.Transaksi_username,
+			"transaksi_roundbet":      client.Transaksi_roundbet,
+			"transaksi_bet":           client.Transaksi_bet,
+			"transaksi_cbefore":       client.Transaksi_cbefore,
+			"transaksi_cafter":        client.Transaksi_cafter,
+			"transaksi_win":           client.Transaksi_win,
+			"transaksi_idpoin":        client.Transaksi_idpoin,
+			"transaksi_resultcardwin": client.Transaksi_resultcardwin,
+			"transaksi_status":        client.Transaksi_status,
 		}).
 		Post(PATH + "api/savetransaksi")
 	if err != nil {
@@ -152,6 +156,79 @@ func SaveTransaksi(c *fiber.Ctx) error {
 			"client_idtransaksi": result.Client_idtransaksi,
 			"client_cardgame":    result.Client_card_game,
 			"time":               time.Since(render_page).String(),
+		})
+	} else {
+		result_error := resp.Error().(*responseerror)
+		return c.JSON(fiber.Map{
+			"status":  result_error.Status,
+			"message": result_error.Message,
+			"time":    time.Since(render_page).String(),
+		})
+	}
+}
+func SaveTransaksiDetail(c *fiber.Ctx) error {
+	type payload_savetransaksidetail struct {
+		Transaksidetail_company       string `json:"transaksidetail_company" `
+		Transaksidetail_idtransaksi   string `json:"transaksidetail_idtransaksi" `
+		Transaksidetail_roundbet      int    `json:"transaksidetail_roundbet" `
+		Transaksidetail_bet           int    `json:"transaksidetail_bet" `
+		Transaksidetail_cbefore       int    `json:"transaksidetail_cbefore" `
+		Transaksidetail_cafter        int    `json:"transaksidetail_cafter" `
+		Transaksidetail_win           int    `json:"transaksidetail_win" `
+		Transaksidetail_idpoin        int    `json:"transaksidetail_idpoin" `
+		Transaksidetail_resultcardwin string `json:"transaksidetail_resultcardwin" `
+		Transaksidetail_status        string `json:"transaksidetail_status" `
+	}
+	hostname := c.Hostname()
+	client := new(payload_savetransaksidetail)
+	if err := c.BodyParser(client); err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"status":  fiber.StatusBadRequest,
+			"message": err.Error(),
+			"record":  nil,
+		})
+	}
+
+	log.Println("Hostname: ", hostname)
+	render_page := time.Now()
+	axios := resty.New()
+	resp, err := axios.R().
+		SetResult(responsedefault{}).
+		SetError(responseerror{}).
+		SetHeader("Content-Type", "application/json").
+		SetBody(map[string]interface{}{
+			"transaksidetail_company":       client.Transaksidetail_company,
+			"transaksidetail_idtransaksi":   client.Transaksidetail_idtransaksi,
+			"transaksidetail_roundbet":      client.Transaksidetail_roundbet,
+			"transaksidetail_bet":           client.Transaksidetail_bet,
+			"transaksidetail_cbefore":       client.Transaksidetail_cbefore,
+			"transaksidetail_cafter":        client.Transaksidetail_cafter,
+			"transaksidetail_win":           client.Transaksidetail_win,
+			"transaksidetail_idpoin":        client.Transaksidetail_idpoin,
+			"transaksidetail_resultcardwin": client.Transaksidetail_resultcardwin,
+			"transaksidetail_status":        client.Transaksidetail_status,
+		}).
+		Post(PATH + "api/savetransaksidetail")
+	if err != nil {
+		log.Println(err.Error())
+	}
+	log.Println("Response Info:")
+	log.Println("  Error      :", err)
+	log.Println("  Status Code:", resp.StatusCode())
+	log.Println("  Status     :", resp.Status())
+	log.Println("  Proto      :", resp.Proto())
+	log.Println("  Time       :", resp.Time())
+	log.Println("  Received At:", resp.ReceivedAt())
+	log.Println("  Body       :\n", resp)
+	log.Println()
+	result := resp.Result().(*responsedefault)
+	if result.Status == 200 {
+		return c.JSON(fiber.Map{
+			"status":  result.Status,
+			"message": result.Message,
+			"record":  result.Record,
+			"time":    time.Since(render_page).String(),
 		})
 	} else {
 		result_error := resp.Error().(*responseerror)

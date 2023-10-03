@@ -6,12 +6,14 @@
     dayjs.extend(utc);
     dayjs.extend(timezone);
     export let path_api = "";
+    export let token_browser = "";
     export let client_company = "";
     export let client_timezone = "";
     export let client_ipaddress = "";
     export let client_name = "";
     export let client_username = "";
     export let client_credit = 0;
+    export let client_listbet = [];
   
    
     let clockmachine = "";
@@ -19,11 +21,19 @@
     let credit = client_credit;
     let temp_credit = credit;
     let list_min_bet = [100,500,1000,1500,5000,10000,25000]
-    let min_bet = "100"
+    let idtransaksi = ""
+    let min_bet = "0"
     let totalbet = 0
     let sound = 0;
     let flag_minimalbet = false;
     let path_card = "CARD/WHITE/";
+    if(client_listbet != null){
+      for(let i=0;i<client_listbet.length;i++){
+        if(i==0){
+          min_bet = client_listbet[i].lisbet_minbet
+        }
+      }
+    }
     let spin = [
       new Audio("/sounds/spin.mp3"),
     ];
@@ -182,6 +192,7 @@
          
     }
     const call_play = () => {
+      idtransaksi = "";
       flag_minimalbet = false;
       c_before = 0;
       c_after = 0;
@@ -312,7 +323,7 @@
         spin[sound].play();
         factory_click("DEAL")
         
-      };
+    };
    
     function hitung_statuswinlose(data_array){
       let data_result = [];
@@ -1133,8 +1144,8 @@
       if(e != "DEAL"){
         switch(count_bet){
           case 1:
-            shuffleArray_card(card_result_data)
-            shuffleArray_bet()
+            // shuffleArray_card(card_result_data)
+            // shuffleArray_bet()
             flag_hitung = false;
             break;
           case 2:
@@ -1170,6 +1181,9 @@
           sound = 0;
           win[sound].play();
           // console.log(status[1])
+          if(e != "DEAL"){
+            sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
+          }
           credit_animation_factory(credit,totalbet,status[1],status[2])
         }else{
           if(e != "DEAL"){
@@ -1645,7 +1659,7 @@
         }
       }
       
-      sendData(0,0,c_before,credit_target,point,0,info_result,shuffleArray,data_win,"WIN")
+      sendData(total_bet,0,c_before,credit_target,point,0,info_result,shuffleArray,data_win,"WIN")
   
       flag_all = false
     }
@@ -1709,10 +1723,39 @@
         status_transaction: data_statustransaksi
       };
       list_datasend = [...list_datasend,objSend]
-  
+      // console.log("code win : "+code_win)
+      // console.log("note win : "+note_win)
+      
       list_datasend.sort((a, b) => b.id_transaksi - a.id_transaksi);
-      savetransaksi(data_roundbet,data_minbet,data_cbefore,data_cafter,data_win,code_win,data_statustransaksi)
-      console.log("LOSE :"+sum_lose+" -- WIN :"+sum_win)
+
+      let resultwin = "";
+      let total_datawin = data_resultcardwin.length
+      console.log("total datawin : "+total_datawin)
+      for(let i=0; i<total_datawin; i++){
+        if(i==total_datawin-1){
+          resultwin += data_resultcardwin[i].id
+        }else{
+          resultwin += data_resultcardwin[i].id + ","
+        }
+      }
+      console.log("STATUS : "+data_statustransaksi)
+      console.log("round bet : "+data_roundbet)
+      console.log("IDTRANSAKSI : "+idtransaksi)
+      if(data_roundbet == 1 ){
+        if(idtransaksi == ""){
+          savetransaksi(data_roundbet,data_minbet,data_cbefore,data_cafter,data_win,code_win,resultwin,data_statustransaksi)
+        }else{
+          savetransaksidetail(idtransaksi,data_roundbet,data_minbet,data_cbefore,data_cafter,data_win,code_win,resultwin,data_statustransaksi)
+        }
+      }else{
+        if(idtransaksi != "" || idtransaksi==null || idtransaksi!= undefined){
+          savetransaksidetail(idtransaksi,data_roundbet,data_minbet,data_cbefore,data_cafter,data_win,code_win,resultwin,data_statustransaksi)
+        }else{
+          alert("Error kartu tidak bisa dibuka")
+        }
+        
+      }
+
     }
     const handleInformation = () => {
         if(!flag_minimalbet){
@@ -1736,7 +1779,8 @@
     const call_carabermain = () => {
       isModal_carabermain = true
     };
-    async function savetransaksi(c_roundbet,c_bet,c_before,c_after,c_win,c_idpoin,c_status) {
+    async function savetransaksi(c_roundbet,c_bet,c_before,c_after,c_win,c_idpoin,resultcardwin,c_status) {
+      flag_all = false
       const res = await fetch(path_api+"api/savetransaksi", {
           method: "POST",
           headers: {
@@ -1751,6 +1795,7 @@
             transaksi_cafter: parseInt(c_after),
             transaksi_win: parseInt(c_win),
             transaksi_idpoin: parseInt(c_idpoin),
+            transaksi_resultcardwin: resultcardwin,
             transaksi_status: c_status,
           }),
       });
@@ -1760,17 +1805,57 @@
       } else if (json.status == 403) {
           alert(json.message);
       } else {
-        console.log(json)
+        // console.log(json)
+        idtransaksi = json.client_idtransaksi
+        let card = json.client_cardgame
+        const myArray = card.split(",");
+        shuffleArray = [];
+        for(let i = 0; i < myArray.length; i++) {
+          shuffleArray.push(card_result_data[myArray[i]]);
+        }
+        // console.log("CARD " + JSON.stringify(shuffleArray))
+        shuffleArray_bet()
+        flag_all = true;
       }
-  }
-    
+    }
+    async function savetransaksidetail(c_idtransaksi,c_roundbet,c_bet,c_before,c_after,c_win,c_idpoin,resultcardwin,c_status) {
+      flag_all = false
+      const res = await fetch(path_api+"api/savetransaksidetail", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            transaksidetail_company: client_company,
+            transaksidetail_idtransaksi: c_idtransaksi,
+            transaksidetail_roundbet: parseInt(c_roundbet),
+            transaksidetail_bet: parseInt(c_bet),
+            transaksidetail_cbefore: parseInt(c_before),
+            transaksidetail_cafter: parseInt(c_after),
+            transaksidetail_win: parseInt(c_win),
+            transaksidetail_idpoin: parseInt(c_idpoin),
+            transaksidetail_resultcardwin: resultcardwin,
+            transaksidetail_status: c_status,
+          }),
+      });
+      const json = await res.json();
+      if (json.status === 400) {
+          // logout();
+      } else if (json.status == 403) {
+          alert(json.message);
+      } else {
+        console.log(json)
+        shuffleArray_bet()
+        flag_all = true;
+      }
+    }
     
   </script>
   
   
     <div class="navbar">
       <div class="navbar-start">
-        <a href="/?token=" >
+        <a href="/?token={token_browser}" >
             <img src="https://sdsb4d.com/logo-green.svg" alt="SDSB" class="hover:scale-110  transition ">
         </a>
       </div>
@@ -1952,12 +2037,12 @@
           <h3 class="text-xs lg:text-sm font-bold -mt-2">MINIMAL BET</h3>
           <div class="h-fit overflow-auto scrollbar-hide mt-2" >
               <div class="grid grid-cols-5 mt-5 gap-2 justify-self-center">
-                {#each list_min_bet as rec}
+                {#each client_listbet as rec}
                   <div
                     on:click={() => {
-                      handle_minbet(rec);
+                      handle_minbet(rec.lisbet_minbet);
                     }} 
-                    class="btn btn-sm btn-outline btn-success cursor-pointer">{new Intl.NumberFormat().format(rec)}</div>
+                    class="btn btn-sm btn-outline btn-success cursor-pointer">{new Intl.NumberFormat().format(rec.lisbet_minbet)}</div>
                 {/each}
               </div>
               

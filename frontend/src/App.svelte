@@ -19,6 +19,7 @@
   let client_company = "";
   let client_username = "";
   let client_name = "";
+  let client_listbet = [];
 
   const card_result_data = [
     {id:"2_diamond",val:"2",val_display:2,code_card:"D",img:"./CARD/WHITE/CARD_RED_DIAMOND_2.png"},
@@ -106,14 +107,13 @@
       } else if (json.status == 403) {
           alert(json.message);
       } else {
-        console.log(json)
-          // initHome();
+          console.log(json)
           flag_game = true;
           client_company = json.client_company;
           client_name = json.client_name;
           client_username = json.client_username;
           client_credit = json.client_credit;
-          console.log(client_credit);
+          client_listbet = json.client_listbet.record;
       }
   }
 </script>
@@ -122,12 +122,14 @@
   {#if flag_game}
     <Home
     {path_api} 
+    {token_browser} 
     {client_company} 
     {client_timezone} 
     {client_ipaddress} 
     {client_username} 
     {client_name} 
-    {client_credit} />
+    {client_credit} 
+    {client_listbet} />
   {/if}
 </main>
 
