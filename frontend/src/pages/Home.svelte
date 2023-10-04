@@ -1822,7 +1822,7 @@
         // console.log(json)
         idtransaksi = json.client_idtransaksi
         let card = json.client_cardgame
-        const myArray = card.split(",");
+        const myArray = card.split("-");
         shuffleArray = [];
         for(let i = 0; i < myArray.length; i++) {
           shuffleArray.push(card_result_data[myArray[i]]);
