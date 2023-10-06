@@ -386,7 +386,7 @@
         let total_temp = temp_result[1];
         let total_jk = 0;
         let total_card = 0;
-        if(parseInt(total_temp) == 5){
+        if(parseInt(total_temp) == 5 || parseInt(total_temp) == 6){
           for(let i=0;i<data_array.length;i++){
             switch(data_array[i].val){
               case "10":
