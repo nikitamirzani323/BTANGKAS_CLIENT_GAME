@@ -1040,6 +1040,43 @@
       }
     
       let flag_two = false
+      if(total_temp == 3){
+        if(total == 4 || total == 6){
+          for(let x=0;x<temp.length;x++){
+            temp_result = temp[x].split(":");
+            switch(temp_result[0]){
+              case "10":
+                flag_two = true;break;
+              case "J":
+                flag_two = true;break;
+              case "Q":
+                flag_two = true;break;
+              case "K":
+                flag_two = true;break;
+              case "AS":
+                flag_two = true;break;
+              case "JK":
+                flag_two = true;break;
+            }
+          }
+          
+          if(flag_two){//2 PAIR
+            info_result = "2 PAIR"
+            info_card = temp
+            flag_func = true
+  
+            for(let i=0;i<temp.length;i++){
+              temp_string = temp[i]
+              temp_result = temp_string.split(":");
+              for(let i=0;i<data_array.length;i++){
+                if(data_array[i].val == temp_result[0]){
+                  data_win.push(data_array[i])
+                }
+              }
+            }
+          }
+        }
+      }
       if(total_temp == 2){
         if(total == 4 || total == 6){
           for(let x=0;x<temp.length;x++){
