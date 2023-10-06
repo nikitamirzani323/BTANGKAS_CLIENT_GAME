@@ -945,6 +945,21 @@
             }
           }
           total_card = parseInt(total_temp) + total_jk
+          if(total_card == 4){
+            info_result = "3 Of A Kind"
+            info_card = pattern_stright_10
+  
+            for(let i=0;i<temp.length;i++){
+              temp_string = temp[i]
+              temp_result = temp_string.split(":");
+              for(let i=0;i<data_array.length;i++){
+                if(data_array[i].val_display == temp_result[0]){
+                  data_win.push(data_array[i])
+                }
+              }
+            }
+            flag_func = true;
+          }
           if(total_card == 3){
             info_result = "3 Of A Kind"
             info_card = pattern_stright_10
