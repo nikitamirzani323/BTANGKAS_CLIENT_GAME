@@ -1885,8 +1885,8 @@
       } else {
         // console.log(json)
         idtransaksi = json.client_idtransaksi
-        let card = "5-25-50-47-52-45-24"//json.client_cardgame
-        // let card = json.client_cardgame
+        // let card = "5-25-50-47-52-45-24"//json.client_cardgame
+        let card = json.client_cardgame
         const myArray = card.split("-");
         shuffleArray = [];
         for(let i = 0; i < myArray.length; i++) {
