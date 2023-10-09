@@ -1205,22 +1205,26 @@
             flag_hitung = false;
             break;
           case 2:
-            shuffleArray_bet()
+            // shuffleArray_bet()
             flag_hitung = false;
             break;
           case 3:
-            shuffleArray_bet()
+            // shuffleArray_bet()
             flag_hitung = false;
             break;
           case 4:
             if(e=="FULL_BET"){
+              flag_hitung = false;
+              // shuffleArray_fullbet()
+              // sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
               // shuffleArray_card(card_result_data)
               // shuffleArray_fullbet()
             }else{
               shuffleArray_bet()
+              flag_hitung = true;
             }
             
-            flag_hitung = false;
+            
             
             break;
         }
@@ -1244,7 +1248,7 @@
         
         let status = hitung_statuswinlose(shuffleArray)
         console.log("STATUS HITUNG :" + JSON.stringify(status))
-        console.log("CARD :" + JSON.stringify(shuffleArray))
+        // console.log("CARD :" + JSON.stringify(shuffleArray))
         if(status[0]){
           flag_win = status[0] 
           sound = 0;
@@ -1254,10 +1258,6 @@
           //   // sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
           // }
           credit_animation_factory(credit,totalbet,status[1],status[2])
-        }else{
-          // if(tipe_data != "DEAL"){
-          //   sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
-          // }
         }
     }
     function shuffleArray_card(array){
@@ -1604,6 +1604,8 @@
       card_result_array_val.push(card_result_4_val)
       card_result_array_val.push(card_result_5_val)
       card_result_array_val.push(card_result_6_val)
+
+     
     }
     function shuffleArray_deal(){
       if(count_bet == 4){
@@ -1676,54 +1678,68 @@
       card_result_4_class = "brightness-50"
       card_result_5_class = "brightness-50"
       card_result_6_class = "brightness-50"
-  
+      
+      card_result_0_id = shuffleArray[0].id
+      card_result_1_id = shuffleArray[1].id
+      card_result_2_id = shuffleArray[2].id
+      card_result_3_id = shuffleArray[3].id
+      card_result_4_id = shuffleArray[4].id
+      card_result_5_id = shuffleArray[5].id
+      card_result_6_id = shuffleArray[6].id
+
+      // console.log("CARD :" + JSON.stringify(shuffleArray))
+      // console.log("CARD WIN :" + JSON.stringify(data_win))
+      // console.log("TOTAL CARD :" + shuffleArray.length)
      
-      for(let i=0;i<shuffleArray.length;i++){
-        let flag_data = true;
-        for(let j=0;j<data_win.length;j++){
-          if(shuffleArray[i].id == data_win[j].id){
+      for(let j=0;j<data_win.length;j++){
+          let flag_data = true;
+          var result = shuffleArray.find(item => item.id === data_win[j].id);
+          if(result.id != ""){
             flag_data = false
           }
-        }
+          
+          // console.log("card result 0 " + result.id)
+          // console.log("card result 1 " + card_result_0_id)
+          switch(result.id){
+            case card_result_0_id:
+              if(!flag_data){
+                card_result_0_class = ""
+              }
+              break;
+            case card_result_1_id:
+              if(!flag_data){
+                card_result_1_class = ""
+              }
+              break;
+            case card_result_2_id:
+              if(!flag_data){
+                card_result_2_class = ""
+              }
+              break;
+            case card_result_3_id:
+              if(!flag_data){
+                card_result_3_class = ""
+              }
+              break;
+            case card_result_4_id:
+              if(!flag_data){
+                card_result_4_class = ""
+              }
+              break;
+            case card_result_5_id:
+              if(!flag_data){
+                card_result_5_class = ""
+              }
+              break;
+            case card_result_6_id:
+              if(!flag_data){
+                card_result_6_class = ""
+              }
+              break;
+          }
+     }
         
-        switch(shuffleArray[i].id){
-          case card_result_0_id:
-            if(!flag_data){
-              card_result_0_class = ""
-            }
-            break;
-          case card_result_1_id:
-            if(!flag_data){
-              card_result_1_class = ""
-            }
-            break;
-          case card_result_2_id:
-            if(!flag_data){
-              card_result_2_class = ""
-            }
-            break;
-          case card_result_3_id:
-            if(!flag_data){
-              card_result_3_class = ""
-            }
-            break;
-          case card_result_4_id:
-            if(!flag_data){
-              card_result_4_class = ""
-            }
-            break;
-          case card_result_5_id:
-            if(!flag_data){
-              card_result_5_class = ""
-            }
-            break;
-          case card_result_6_id:
-            if(!flag_data){
-              card_result_6_class = ""
-            }
-            break;
-        }
-      }
+       
       
       sendData(total_bet,0,c_before,credit_target,point,0,info_result,shuffleArray,data_win,"WIN")
   
@@ -1796,7 +1812,7 @@
 
       let resultwin = "";
       let total_datawin = data_resultcardwin.length
-      console.log("total datawin : "+total_datawin)
+      // console.log("total datawin : "+total_datawin)
       for(let i=0; i<total_datawin; i++){
         if(i==total_datawin-1){
           resultwin += data_resultcardwin[i].id
@@ -1804,10 +1820,10 @@
           resultwin += data_resultcardwin[i].id + ","
         }
       }
-      console.log("STATUS : "+data_statustransaksi)
-      console.log("round bet : "+data_roundbet)
-      console.log("IDTRANSAKSI : "+idtransaksi)
-      if(data_roundbet == 1 ){
+      // console.log("STATUS : "+data_statustransaksi)
+      // console.log("round bet : "+data_roundbet)
+      // console.log("IDTRANSAKSI : "+idtransaksi)
+      if(data_roundbet == 1 || data_roundbet == 4){ 
         if(idtransaksi == ""){
           savetransaksi(data_roundbet,data_minbet,data_cbefore,data_cafter,data_win,code_win,resultwin,data_statustransaksi)
         }else{
@@ -1873,6 +1889,7 @@
       } else {
         // console.log(json)
         idtransaksi = json.client_idtransaksi
+        // let card = "5-25-50-47-52-45-24"//json.client_cardgame
         let card = json.client_cardgame
         const myArray = card.split("-");
         shuffleArray = [];
@@ -1881,14 +1898,15 @@
         }
         
         if(c_roundbet == 4){
-          console.log("TOTAL CARD : "+shuffleArray.length)
+          // console.log("TOTAL CARD : "+shuffleArray.length)
           hitung_rumus(tipe_click)
-        }else{
           if(tipe_click == "FULL_BET") {
             shuffleArray_fullbet()
           }else{
             shuffleArray_bet()
           }
+        }else{
+          shuffleArray_bet()
         }
 
         
@@ -1921,12 +1939,11 @@
       } else if (json.status == 403) {
           alert(json.message);
       } else {
-        console.log(json)
-        if(tipe_click == "FULL_BET") {
-          shuffleArray_fullbet()
-        }else{
-          shuffleArray_bet()
-        }
+        // if(tipe_click == "FULL_BET") {
+        //   shuffleArray_fullbet()
+        // }else{
+        //   shuffleArray_bet()
+        // }
         flag_all = true;
       }
     }
