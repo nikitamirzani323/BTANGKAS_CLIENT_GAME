@@ -175,7 +175,7 @@ func SaveTransaksiDetail(c *fiber.Ctx) error {
 		Transaksidetail_cbefore       int    `json:"transaksidetail_cbefore" `
 		Transaksidetail_cafter        int    `json:"transaksidetail_cafter" `
 		Transaksidetail_win           int    `json:"transaksidetail_win" `
-		Transaksidetail_idpoin        string `json:"transaksidetail_idpoin" `
+		Transaksidetail_idpoin        int    `json:"transaksidetail_idpoin" `
 		Transaksidetail_resultcardwin string `json:"transaksidetail_resultcardwin" `
 		Transaksidetail_status        string `json:"transaksidetail_status" `
 	}

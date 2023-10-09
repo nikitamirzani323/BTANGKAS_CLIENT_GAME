@@ -1200,8 +1200,6 @@
       if(e != "DEAL"){
         switch(count_bet){
           case 1:
-            // shuffleArray_card(card_result_data)
-            // shuffleArray_bet()
             flag_hitung = false;
             break;
           case 2:
@@ -1913,7 +1911,7 @@
     }
     async function savetransaksidetail(c_idtransaksi,c_roundbet,c_bet,c_before,c_after,c_win,c_idpoin,resultcardwin,c_status) {
       flag_all = false
-      console.log(c_idpoin)
+      // console.log(c_idpoin)
       const res = await fetch(path_api+"api/savetransaksidetail", {
           method: "POST",
           headers: {
@@ -1927,7 +1925,7 @@
             transaksidetail_cbefore: parseInt(c_before),
             transaksidetail_cafter: parseInt(c_after),
             transaksidetail_win: parseInt(c_win),
-            transaksidetail_idpoin: c_idpoin,
+            transaksidetail_idpoin: parseInt(c_idpoin),
             transaksidetail_resultcardwin: resultcardwin,
             transaksidetail_status: c_status,
           }),
@@ -1938,11 +1936,11 @@
       } else if (json.status == 403) {
           alert(json.message);
       } else {
-        // if(tipe_click == "FULL_BET") {
-        //   shuffleArray_fullbet()
-        // }else{
-        //   shuffleArray_bet()
-        // }
+        if(tipe_click == "FULL_BET") {
+          shuffleArray_fullbet()
+        }else{
+          shuffleArray_bet()
+        }
         flag_all = true;
       }
     }
