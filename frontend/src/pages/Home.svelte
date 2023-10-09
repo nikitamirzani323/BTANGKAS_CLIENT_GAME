@@ -358,7 +358,7 @@
           }
         }
       }
-      console.log("POINT : " + data_result[2])
+      // console.log("POINT : " + data_result[2])
       
       return [data_result[0],data_result[1],data_result[2]]
     }
@@ -1666,7 +1666,7 @@
       point_style_result = "text-secondary font-bold";
       list_point_style = "bg-slate-500"
       list_point_id = list_point[n].id
-  
+      console.log("POINT ID :" + list_point_id)
       c_before = credit;
       credit = credit - (parseInt(min_bet) * totalbet);
       c_after = credit;
@@ -1687,9 +1687,7 @@
       card_result_5_id = shuffleArray[5].id
       card_result_6_id = shuffleArray[6].id
 
-      // console.log("CARD :" + JSON.stringify(shuffleArray))
-      // console.log("CARD WIN :" + JSON.stringify(data_win))
-      // console.log("TOTAL CARD :" + shuffleArray.length)
+     
      
       for(let j=0;j<data_win.length;j++){
           let flag_data = true;
@@ -1741,7 +1739,7 @@
         
        
       
-      sendData(total_bet,0,c_before,credit_target,point,0,info_result,shuffleArray,data_win,"WIN")
+      sendData(total_bet,0,c_before,credit_target,point,list_point[n].code,info_result,shuffleArray,data_win,"WIN")
   
       flag_all = false
     }
@@ -1889,8 +1887,8 @@
       } else {
         // console.log(json)
         idtransaksi = json.client_idtransaksi
-        // let card = "5-25-50-47-52-45-24"//json.client_cardgame
-        let card = json.client_cardgame
+        let card = "5-25-50-47-52-45-24"//json.client_cardgame
+        // let card = json.client_cardgame
         const myArray = card.split("-");
         shuffleArray = [];
         for(let i = 0; i < myArray.length; i++) {
@@ -1915,6 +1913,7 @@
     }
     async function savetransaksidetail(c_idtransaksi,c_roundbet,c_bet,c_before,c_after,c_win,c_idpoin,resultcardwin,c_status) {
       flag_all = false
+      console.log(c_idpoin)
       const res = await fetch(path_api+"api/savetransaksidetail", {
           method: "POST",
           headers: {
@@ -1928,7 +1927,7 @@
             transaksidetail_cbefore: parseInt(c_before),
             transaksidetail_cafter: parseInt(c_after),
             transaksidetail_win: parseInt(c_win),
-            transaksidetail_idpoin: parseInt(c_idpoin),
+            transaksidetail_idpoin: c_idpoin,
             transaksidetail_resultcardwin: resultcardwin,
             transaksidetail_status: c_status,
           }),
