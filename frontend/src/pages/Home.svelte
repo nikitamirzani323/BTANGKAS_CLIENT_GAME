@@ -386,41 +386,43 @@
         let total_temp = temp_result[1];
         let total_jk = 0;
         let total_card = 0;
-        if(parseInt(total_temp) == 5 || parseInt(total_temp) == 6){
-          for(let i=0;i<data_array.length;i++){
-            switch(data_array[i].val){
-              case "10":
-                total_jk = total_jk + 1;break;
-              case "J":
-                total_jk = total_jk + 1;break;
-              case "K":
-                total_jk = total_jk + 1;break;
-              case "Q":
-                total_jk = total_jk + 1;break;
-              case "AS":
-                total_jk = total_jk + 1;break;
-              case "JK":
-                total_jk = total_jk + 1;break;
-            }
-          }
-          total_card = total_jk
-          if(total_card == 5){
-            info_result = "Royal Flush"
-            info_card = pattern_stright_10
-            flag_func = true;
-          
-            for(let i=0;i<temp.length;i++){
-              temp_string = temp[i]
-              temp_result = temp_string.split(":");
-              for(let i=0;i<data_array.length;i++){
-                if(data_array[i].code_card == temp_result[0]){
-                  data_win.push(data_array[i])
-                }
+        if(temp_result[0] == "S"){
+          if(parseInt(total_temp) == 5 || parseInt(total_temp) == 6){
+            for(let i=0;i<data_array.length;i++){
+              switch(data_array[i].val){
+                case "10":
+                  total_jk = total_jk + 1;break;
+                case "J":
+                  total_jk = total_jk + 1;break;
+                case "K":
+                  total_jk = total_jk + 1;break;
+                case "Q":
+                  total_jk = total_jk + 1;break;
+                case "AS":
+                  total_jk = total_jk + 1;break;
+                case "JK":
+                  total_jk = total_jk + 1;break;
               }
             }
-  
-            // credit_animation(credit,0,totalbet)
+            total_card = total_jk
+            if(total_card == 5){
+              info_result = "Royal Flush"
+              info_card = pattern_stright_10
+              flag_func = true;
             
+              for(let i=0;i<temp.length;i++){
+                temp_string = temp[i]
+                temp_result = temp_string.split(":");
+                for(let i=0;i<data_array.length;i++){
+                  if(data_array[i].code_card == temp_result[0]){
+                    data_win.push(data_array[i])
+                  }
+                }
+              }
+    
+              // credit_animation(credit,0,totalbet)
+              
+            }
           }
         }
       }
