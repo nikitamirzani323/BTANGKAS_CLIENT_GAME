@@ -470,7 +470,7 @@
               temp_string = temp[i]
               temp_result = temp_string.split(":");
               for(let i=0;i<data_array.length;i++){
-                if(data_array[i].val == temp_result[0] || data_array[i].val == "JK"){
+                if(data_array[i].val_display == temp_result[0] || data_array[i].val == "JK"){
                   data_win.push(data_array[i])
                 }
               }
@@ -494,7 +494,7 @@
               temp_string = temp[i]
               temp_result = temp_string.split(":");
               for(let i=0;i<data_array.length;i++){
-                if(data_array[i].val == temp_result[0] || data_array[i].val == "JK"){
+                if(data_array[i].val_display == temp_result[0] || data_array[i].val == "JK"){
                   data_win.push(data_array[i])
                 }
               }
