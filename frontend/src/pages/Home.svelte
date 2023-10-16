@@ -1886,16 +1886,19 @@
       } else if (json.status == 403) {
           alert(json.message);
       } else {
-        // console.log(json)
+      
         idtransaksi = json.client_idtransaksi
-        // let card = "5-25-50-47-52-45-24"//json.client_cardgame
+      
         let card = json.client_cardgame
+        let card_length = parseInt(json.client_cardlength)
         const myArray = card.split("-");
         shuffleArray = [];
         for(let i = 0; i < myArray.length; i++) {
           shuffleArray.push(card_result_data[myArray[i]]);
         }
-        
+        if((card_length-1) == parseInt(round_game_all)){
+          round_game_all = 0
+        }
         if(c_roundbet == 4){
           // console.log("TOTAL CARD : "+shuffleArray.length)
           hitung_rumus(tipe_click)

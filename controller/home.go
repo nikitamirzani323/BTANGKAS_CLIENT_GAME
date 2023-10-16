@@ -22,6 +22,7 @@ type responsesavetransaksi struct {
 	Client_message     string `json:"message"`
 	Client_idtransaksi string `json:"idtransaksi"`
 	Client_card_game   string `json:"card_game"`
+	Client_card_length int    `json:"card_length"`
 }
 type responsedefault struct {
 	Status  int         `json:"status"`
@@ -157,6 +158,7 @@ func SaveTransaksi(c *fiber.Ctx) error {
 			"status":             result.Client_status,
 			"client_idtransaksi": result.Client_idtransaksi,
 			"client_cardgame":    result.Client_card_game,
+			"client_cardlength":  result.Client_card_length,
 			"time":               time.Since(render_page).String(),
 		})
 	} else {
