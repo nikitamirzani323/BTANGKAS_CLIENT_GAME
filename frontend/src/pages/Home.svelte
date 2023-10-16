@@ -133,8 +133,7 @@
     let list_datasend = []
     let info_card_win = []
     let list_combine = [];
-    let putaran = 0;
-    let counter_putaran = 0;
+    let round_game_all = -1;
     let counter_transaksi = 0;
     let sum_lose = 0;
     let sum_win = 0;
@@ -1861,6 +1860,7 @@
     };
     async function savetransaksi(c_roundbet,c_bet,c_before,c_after,c_win,c_idpoin,resultcardwin,c_status) {
       flag_all = false
+      round_game_all = round_game_all + 1
       const res = await fetch(path_api+"api/savetransaksi", {
           method: "POST",
           headers: {
@@ -1869,6 +1869,7 @@
           body: JSON.stringify({
             transaksi_company: client_company,
             transaksi_username: client_username,
+            transaksi_roundgameall: parseInt(round_game_all),
             transaksi_roundbet: parseInt(c_roundbet),
             transaksi_bet: parseInt(c_bet),
             transaksi_cbefore: parseInt(c_before),

@@ -97,6 +97,7 @@ func SaveTransaksi(c *fiber.Ctx) error {
 	type payload_savetransaksi struct {
 		Transaksi_company       string `json:"transaksi_company" `
 		Transaksi_username      string `json:"transaksi_username" `
+		Transaksi_roundgameall  int    `json:"transaksi_roundgameall" `
 		Transaksi_roundbet      int    `json:"transaksi_roundbet" `
 		Transaksi_bet           int    `json:"transaksi_bet" `
 		Transaksi_cbefore       int    `json:"transaksi_cbefore" `
@@ -127,6 +128,7 @@ func SaveTransaksi(c *fiber.Ctx) error {
 		SetBody(map[string]interface{}{
 			"transaksi_company":       client.Transaksi_company,
 			"transaksi_username":      client.Transaksi_username,
+			"transaksi_roundgameall":  client.Transaksi_roundgameall,
 			"transaksi_roundbet":      client.Transaksi_roundbet,
 			"transaksi_bet":           client.Transaksi_bet,
 			"transaksi_cbefore":       client.Transaksi_cbefore,
