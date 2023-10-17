@@ -1897,7 +1897,7 @@
           shuffleArray.push(card_result_data[myArray[i]]);
         }
         if((card_length-1) == parseInt(round_game_all)){
-          round_game_all = 0
+          round_game_all = -1
         }
         if(c_roundbet == 4){
           // console.log("TOTAL CARD : "+shuffleArray.length)
