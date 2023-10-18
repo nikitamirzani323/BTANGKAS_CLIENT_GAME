@@ -94,6 +94,63 @@ func CheckToken(c *fiber.Ctx) error {
 		})
 	}
 }
+func Listinvoice(c *fiber.Ctx) error {
+	type payload_listinvoice struct {
+		Invoice_company  string `json:"invoice_company" `
+		Invoice_username string `json:"invoice_username" `
+	}
+	hostname := c.Hostname()
+	client := new(payload_listinvoice)
+	if err := c.BodyParser(client); err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"status":  fiber.StatusBadRequest,
+			"message": err.Error(),
+			"record":  nil,
+		})
+	}
+
+	log.Println("Hostname: ", hostname)
+	render_page := time.Now()
+	axios := resty.New()
+	resp, err := axios.R().
+		SetResult(responsedefault{}).
+		SetError(responseerror{}).
+		SetHeader("Content-Type", "application/json").
+		SetBody(map[string]interface{}{
+			"invoice_company":  client.Invoice_company,
+			"invoice_username": client.Invoice_username,
+		}).
+		Post(PATH + "api/listinvoice")
+	if err != nil {
+		log.Println(err.Error())
+	}
+	log.Println("Response Info:")
+	log.Println("  Error      :", err)
+	log.Println("  Status Code:", resp.StatusCode())
+	log.Println("  Status     :", resp.Status())
+	log.Println("  Proto      :", resp.Proto())
+	log.Println("  Time       :", resp.Time())
+	log.Println("  Received At:", resp.ReceivedAt())
+	log.Println("  Body       :\n", resp)
+	log.Println()
+	result := resp.Result().(*responsedefault)
+	if result.Status == 200 {
+		return c.JSON(fiber.Map{
+			"status":  result.Status,
+			"message": result.Message,
+			"record":  result.Record,
+			"time":    time.Since(render_page).String(),
+		})
+	} else {
+		result_error := resp.Error().(*responseerror)
+		return c.JSON(fiber.Map{
+			"status":  result_error.Status,
+			"message": result_error.Message,
+			"time":    time.Since(render_page).String(),
+		})
+	}
+}
 func SaveTransaksi(c *fiber.Ctx) error {
 	type payload_savetransaksi struct {
 		Transaksi_company       string `json:"transaksi_company" `
@@ -104,7 +161,7 @@ func SaveTransaksi(c *fiber.Ctx) error {
 		Transaksi_cbefore       int    `json:"transaksi_cbefore" `
 		Transaksi_cafter        int    `json:"transaksi_cafter" `
 		Transaksi_win           int    `json:"transaksi_win" `
-		Transaksi_idpoin        int    `json:"transaksi_idpoin" `
+		Transaksi_codepoin      string `json:"transaksi_codepoin" `
 		Transaksi_resultcardwin string `json:"transaksi_resultcardwin" `
 		Transaksi_status        string `json:"transaksi_status" `
 	}
@@ -135,7 +192,7 @@ func SaveTransaksi(c *fiber.Ctx) error {
 			"transaksi_cbefore":       client.Transaksi_cbefore,
 			"transaksi_cafter":        client.Transaksi_cafter,
 			"transaksi_win":           client.Transaksi_win,
-			"transaksi_idpoin":        client.Transaksi_idpoin,
+			"transaksi_codepoin":      client.Transaksi_codepoin,
 			"transaksi_resultcardwin": client.Transaksi_resultcardwin,
 			"transaksi_status":        client.Transaksi_status,
 		}).
@@ -179,7 +236,7 @@ func SaveTransaksiDetail(c *fiber.Ctx) error {
 		Transaksidetail_cbefore       int    `json:"transaksidetail_cbefore" `
 		Transaksidetail_cafter        int    `json:"transaksidetail_cafter" `
 		Transaksidetail_win           int    `json:"transaksidetail_win" `
-		Transaksidetail_idpoin        int    `json:"transaksidetail_idpoin" `
+		Transaksidetail_codepoin      string `json:"transaksidetail_codepoin" `
 		Transaksidetail_resultcardwin string `json:"transaksidetail_resultcardwin" `
 		Transaksidetail_status        string `json:"transaksidetail_status" `
 	}
@@ -209,7 +266,7 @@ func SaveTransaksiDetail(c *fiber.Ctx) error {
 			"transaksidetail_cbefore":       client.Transaksidetail_cbefore,
 			"transaksidetail_cafter":        client.Transaksidetail_cafter,
 			"transaksidetail_win":           client.Transaksidetail_win,
-			"transaksidetail_idpoin":        client.Transaksidetail_idpoin,
+			"transaksidetail_codepoin":      client.Transaksidetail_codepoin,
 			"transaksidetail_resultcardwin": client.Transaksidetail_resultcardwin,
 			"transaksidetail_status":        client.Transaksidetail_status,
 		}).

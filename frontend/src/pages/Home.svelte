@@ -127,6 +127,7 @@
     const pattern_stright_9 = [10,11,12,13,14]
     const pattern_stright_10 = [14,2,3,4,5]
     
+    let list_invoice = []
     let list_detailtransaksi = []
     let list_detailtransaksi_win = []
     let list_detailtransaksi_notewin = ""
@@ -1215,7 +1216,6 @@
             if(e=="FULL_BET"){
               flag_hitung = false;
               // shuffleArray_fullbet()
-              // sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
               // shuffleArray_card(card_result_data)
               // shuffleArray_fullbet()
             }else{
@@ -1239,7 +1239,7 @@
           hitung_rumus(e)
         }
       }else{
-        sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
+        sendData(totalbet,min_bet,c_before,c_after,0,"","",shuffleArray,"","LOSE")
       }
     }
     function hitung_rumus(tipe_data){
@@ -1507,7 +1507,7 @@
       if(count_bet == 4){
         flag_bet = false
       }
-      // sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
+  
       if(count_bet == 1){
         card_result_0_id = shuffleArray[0].id
         card_result_2_id = shuffleArray[2].id
@@ -1802,7 +1802,7 @@
         status_transaction: data_statustransaksi
       };
       list_datasend = [...list_datasend,objSend]
-      // console.log("code win : "+code_win)
+      console.log("code win : "+code_win)
       // console.log("note win : "+note_win)
       
       list_datasend.sort((a, b) => b.id_transaksi - a.id_transaksi);
@@ -1847,14 +1847,31 @@
     };
     const call_allinvoice = () => {
       isModal_allinvoice = true
-      // fetch_invoicell()
-      };
+      fetch_invoicell()
+    };
     const call_detailinvoice = (e,f,d) => {
       isModal_detailtransaksi = true
-      list_detailtransaksi = e
-      list_detailtransaksi_win = f
+      // alert(f)
+      list_detailtransaksi = []
+      list_detailtransaksi_win = []
       list_detailtransaksi_notewin = d
-      };
+
+     
+      const card_result = e.split("-");
+      const card_win = f.split(",");
+      for(let i = 0; i < card_result.length; i++) {
+        list_detailtransaksi.push(card_result_data[card_result[i]].img);
+      }
+      for(let i = 0; i < card_win.length; i++) {
+        for(let j = 0; j < card_result_data.length; j++) {
+          if(card_result_data[j].id === card_win[i]){
+            list_detailtransaksi_win.push(card_result_data[j].img)
+          }
+        }
+      }
+      console.log(f)
+      console.log(list_detailtransaksi_win)
+    };
     const call_carabermain = () => {
       isModal_carabermain = true
     };
@@ -1875,7 +1892,7 @@
             transaksi_cbefore: parseInt(c_before),
             transaksi_cafter: parseInt(c_after),
             transaksi_win: parseInt(c_win),
-            transaksi_idpoin: parseInt(c_idpoin),
+            transaksi_codepoin: c_idpoin,
             transaksi_resultcardwin: resultcardwin,
             transaksi_status: c_status,
           }),
@@ -1931,7 +1948,7 @@
             transaksidetail_cbefore: parseInt(c_before),
             transaksidetail_cafter: parseInt(c_after),
             transaksidetail_win: parseInt(c_win),
-            transaksidetail_idpoin: parseInt(c_idpoin),
+            transaksidetail_codepoin: c_idpoin,
             transaksidetail_resultcardwin: resultcardwin,
             transaksidetail_status: c_status,
           }),
@@ -1950,7 +1967,61 @@
         flag_all = true;
       }
     }
-    
+    async function fetch_invoicell() {
+      list_invoice = []
+      const res = await fetch(path_api+"api/listinvoice", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            invoice_company: client_company,
+            Invoice_username: client_username,
+          }),
+      });
+      const json = await res.json();
+      if (json.status === 400) {
+          // logout();
+      } else if (json.status == 403) {
+          alert(json.message);
+      } else {
+        let record = json.record;
+        if (record != null) {
+            for (var i = 0; i < record.length; i++) {
+              let winlose = parseInt(record[i]["invoice_totalwin"]) - (parseInt(record[i]["invoice_round"]*record[i]["invoice_totalbet"]))
+              let winlose_css = "";
+              let status_css = ""
+              if(winlose >0){
+                winlose_css = "text-accent";
+              }else{
+                winlose_css = "text-error";
+              }
+              if(record[i]["invoice_status"] == "LOSE"){
+                status_css = "bg-error text-white";
+              }else{
+                status_css = "bg-success text-black";
+              }
+              list_invoice = [
+                    ...list_invoice,
+                    {
+                        invoice_id: record[i]["invoice_id"],
+                        invoice_date: record[i]["invoice_date"],
+                        invoice_round: record[i]["invoice_round"],
+                        invoice_totalbet: record[i]["invoice_totalbet"],
+                        invoice_totalwin: record[i]["invoice_totalwin"],
+                        invoice_winlose: winlose,
+                        invoice_winlose_css: winlose_css,
+                        invoice_card_result: record[i]["invoice_card_result"],
+                        invoice_card_win: record[i]["invoice_card_win"],
+                        invoice_nmpoin: record[i]["invoice_nmpoin"],
+                        invoice_status: record[i]["invoice_status"],
+                        invoice_status_css: status_css,
+                    },
+                ];
+            }
+        }
+      }
+    }
   </script>
   
   
@@ -1991,7 +2062,7 @@
       </div>
     </div>
   
-    <section class="flex lg:hidden justify-center w-full mb-2 gap-2 bg-base-200 p-2 rounded-md">
+    <section class="flex lg:hidden justify-center w-full mb-2 gap-2 bg-base-200 p-2 rounded-md ">
       <p class="w-full text-xs  text-left">
         Asia/Jakarta <br />
         {clockmachine}  WIB (+7)<br>
@@ -2160,36 +2231,27 @@
           <table class="table table-xs w-full" >
               <thead class="sticky top-0">
                   <tr>
-                      <th width="5%" class="text-xs text-left align-top">CODE TRANSAKSI</th>
+                    <th colspan=3 class="text-center">Update Every 3 Minute</th>
+                  </tr>
+                  <tr>
                       <th width="5%" class="text-xs text-center align-top">STATUS</th>
-                      <th width="5%" class="text-xs text-right align-top">ROUND BET X BET</th>
-                      <th width="7%" class="text-xs text-right align-top">CREDIT BEFORE</th>
-                      <th width="7%" class="text-xs text-right align-top">TOTAL BET</th>
-                      <th width="5%" class="text-xs text-right align-top">WIN</th>
-                      <th width="7%" class="text-xs text-right align-top">CREDIT AFTER</th>
-                      <th width="*" class="text-xs text-center align-top">DETAIL</th>
+                      <th width="5%" class="text-xs text-left align-top">INVOICE TRANSAKSI</th>
+                      <th width="*" class="text-xs text-right align-top">WINLOSE</th>
                   </tr>
               </thead>
               <tbody>
-                  {#each list_datasend as rec}
+                  {#each list_invoice as rec}
                   <tr>
-                    <td class="text-xs  text-left whitespace-nowrap align-top">
-                      {rec.id_transaksi}<br />
-                      {rec.date_transaksi}
-                    </td>
                     <td class="text-xs  text-center whitespace-nowrap align-top">
-                      <span class="{rec.status_transaction_css} p-1 text-xs lg:text-sm  uppercase  rounded-lg w-20 ">{rec.status_transaction}</span>
+                      <span class="{rec.invoice_status_css} p-1 text-xs lg:text-sm  uppercase  rounded-lg w-20 ">{rec.invoice_status}</span>
                     </td>
-                    <td class="text-xs text-right link-accent whitespace-nowrap align-top">{new Intl.NumberFormat().format(rec.round_bet)} X (-{new Intl.NumberFormat().format(rec.bet)})</td>
-                    <td class="text-xs text-right link-accent whitespace-nowrap align-top">{new Intl.NumberFormat().format(rec.credit_before)}</td>
-                    <td class="text-xs text-right text-error whitespace-nowrap align-top">-{new Intl.NumberFormat().format(rec.total_bet)}</td>
-                    <td class="text-xs text-right text-secondary whitespace-nowrap align-top">(+{new Intl.NumberFormat().format(rec.win)})</td>
-                    <td class="text-xs text-right link-accent whitespace-nowrap align-top">{new Intl.NumberFormat().format(rec.credit_after)}</td>
-                    <td class="text-xs text-center whitespace-nowrap w-52 align-top">
-                      <label on:click={() => {
-                          call_detailinvoice(rec.result_card,rec.result_card_win,rec.note_win);
-                        }}  class="badge badge-neutral cursor-pointer">Detail</label>
+                    <td on:click={() => {
+                      call_detailinvoice(rec.invoice_card_result,rec.invoice_card_win,rec.invoice_nmpoin);
+                      }} class="text-xs  text-left whitespace-nowrap align-top cursor-pointer underline">
+                      {rec.invoice_id}<br />
+                      {rec.invoice_date}<br />
                     </td>
+                    <td class="text-xs text-right  whitespace-nowrap align-top {rec.invoice_winlose_css}">{new Intl.NumberFormat().format(rec.invoice_winlose)}</td>
                   </tr>
                   {/each}
               </tbody>
@@ -2246,7 +2308,7 @@
         <div class="flex flex-col gap-1 w-full">
           <div class="grid grid-cols-7 w-full mt-5">
             {#each list_detailtransaksi as rec2}
-              <img  src="{rec2.img}" alt="" srcset=""> 
+              <img  src="{rec2}"> 
             {/each}
           </div>
           <div class="w-full text-center">
@@ -2254,7 +2316,7 @@
           </div>
           <div class="grid grid-cols-7 mt-5 w-full">
             {#each list_detailtransaksi_win as rec2}
-            <img  src="{rec2.img}" alt="" srcset=""> 
+            <img  src="{rec2}" > 
             {/each}
           </div>
         </div>
