@@ -1219,6 +1219,7 @@
               // shuffleArray_card(card_result_data)
               // shuffleArray_fullbet()
             }else{
+              sendData(totalbet,min_bet,c_before,c_after,0,"","",shuffleArray,"","LOSE")
               shuffleArray_bet()
               flag_hitung = true;
             }
