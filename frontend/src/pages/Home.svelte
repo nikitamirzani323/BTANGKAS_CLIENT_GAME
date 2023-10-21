@@ -807,6 +807,8 @@
           }
       }
       let total = 0;
+      let total_all = 0;
+      let total_jk = 0;
       let total_temp = temp.length
       let temp_string = ""
       let temp_result;
@@ -814,6 +816,30 @@
           temp_string = temp[i]
           temp_result = temp_string.split(":");
           total = total + parseInt(temp_result[1])
+      }
+      if(total == 4){
+        for(let i=0;i<data_array.length;i++){
+          if(data_array[i].val == "JK"){
+            total_jk = total_jk + 1
+            data_win.push(data_array[i])
+          }
+        }
+        
+        total_all = total_all + total + total_jk
+        if(total_all == 5){
+          info_result = "FULL HOUSE"
+          info_card = temp
+          flag_func = true
+          for(let i=0;i<temp.length;i++){
+              temp_string = temp[i]
+              temp_result = temp_string.split(":");
+              for(let i=0;i<data_array.length;i++){
+                if(data_array[i].val == temp_result[0]){
+                  data_win.push(data_array[i])
+                }
+              }
+          }
+        }
       }
       if(total == 5){//FULL HOUSE
         if(temp.length == 2){
