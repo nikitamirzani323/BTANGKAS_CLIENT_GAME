@@ -126,6 +126,31 @@
     const pattern_stright_8 = [9,10,11,12,13]
     const pattern_stright_9 = [10,11,12,13,14]
     const pattern_stright_10 = [14,2,3,4,5]
+
+    const pattern_4_1 = [2,3,4,5]
+    const pattern_4_2 = [3,4,5,6]
+    const pattern_4_3 = [4,5,6,7]
+    const pattern_4_4 = [5,6,7,8]
+    const pattern_4_5 = [6,7,8,9]
+    const pattern_4_6 = [7,8,9,10]
+    const pattern_4_7 = [8,9,10,11]
+    const pattern_4_8 = [9,10,11,12]
+    const pattern_4_9 = [10,11,12,13]
+    const pattern_4_10 = [11,12,13,14]
+    const pattern_4_11 = [14,2,3,4]
+
+    const pattern_3_1 = [2,3,4]
+    const pattern_3_2 = [3,4,5]
+    const pattern_3_3 = [4,5,6]
+    const pattern_3_4 = [5,6,7]
+    const pattern_3_5 = [6,7,8]
+    const pattern_3_6 = [7,8,9]
+    const pattern_3_7 = [8,9,10]
+    const pattern_3_8 = [9,10,11]
+    const pattern_3_9 = [10,11,12]
+    const pattern_3_10 = [11,12,13]
+    const pattern_3_11 = [12,13,14]
+    const pattern_3_12 = [14,2,3]
     
     let list_invoice = []
     let list_detailtransaksi = []
@@ -376,9 +401,11 @@
       }
       let temp = [];
       for(let prop in counts){
-        if (counts[prop] >= 4){
+        if (counts[prop] >= 3){
+            if(prop == "S"){
               temp.push(prop + ":" + counts[prop])
-          }
+            }
+        }
       }
       if(temp.length > 0){
         let temp_string = temp[0]
@@ -389,42 +416,81 @@
         if(temp_result[0] == "S"){
           if(parseInt(total_temp) == 5 || parseInt(total_temp) == 6){
             for(let i=0;i<data_array.length;i++){
-              switch(data_array[i].val){
-                case "10":
-                  total_jk = total_jk + 1;break;
-                case "J":
-                  total_jk = total_jk + 1;break;
-                case "K":
-                  total_jk = total_jk + 1;break;
-                case "Q":
-                  total_jk = total_jk + 1;break;
-                case "AS":
-                  total_jk = total_jk + 1;break;
-                case "JK":
-                  total_jk = total_jk + 1;break;
+              if(data_array[i].code_card == "S" || data_array[i].code_card == "JK"){
+                switch(data_array[i].val){
+                    case "10":
+                      total_jk = total_jk + 1;break;
+                    case "J":
+                      total_jk = total_jk + 1;break;
+                    case "K":
+                      total_jk = total_jk + 1;break;
+                    case "Q":
+                      total_jk = total_jk + 1;break;
+                    case "AS":
+                      total_jk = total_jk + 1;break;
+                    case "JK":
+                      total_jk = total_jk + 1;break;
+                }
               }
             }
             total_card = total_jk
-            if(total_card == 5){
-              info_result = "Royal Flush"
-              info_card = pattern_stright_10
-              flag_func = true;
-            
-              for(let i=0;i<temp.length;i++){
-                temp_string = temp[i]
-                temp_result = temp_string.split(":");
-                for(let i=0;i<data_array.length;i++){
-                  if(data_array[i].code_card == temp_result[0]){
-                    data_win.push(data_array[i])
-                  }
+          }
+          if(parseInt(total_temp) == 4){
+            for(let i=0;i<data_array.length;i++){
+              if(data_array[i].code_card == "S" || data_array[i].code_card == "JK"){
+                switch(data_array[i].val){
+                    case "10":
+                      total_jk = total_jk + 1;break;
+                    case "J":
+                      total_jk = total_jk + 1;break;
+                    case "K":
+                      total_jk = total_jk + 1;break;
+                    case "Q":
+                      total_jk = total_jk + 1;break;
+                    case "AS":
+                      total_jk = total_jk + 1;break;
+                    case "JK":
+                      total_jk = total_jk + 1;break;
                 }
               }
-    
-              // credit_animation(credit,0,totalbet)
-              
             }
+            total_card = total_jk
+          }
+          if(parseInt(total_temp) == 3){
+            for(let i=0;i<data_array.length;i++){
+              if(data_array[i].code_card == "S" || data_array[i].code_card == "JK"){
+                switch(data_array[i].val){
+                    case "10":
+                      total_jk = total_jk + 1;break;
+                    case "J":
+                      total_jk = total_jk + 1;break;
+                    case "K":
+                      total_jk = total_jk + 1;break;
+                    case "Q":
+                      total_jk = total_jk + 1;break;
+                    case "AS":
+                      total_jk = total_jk + 1;break;
+                    case "JK":
+                      total_jk = total_jk + 1;break;
+                }
+              }
+            }
+            total_card = total_jk
           }
         }
+       
+   
+        if(total_card == 5){
+            info_result = "Royal Flush"
+            info_card = pattern_stright_10
+            flag_func = true;
+          
+            for(let i=0;i<data_array.length;i++){
+              if(data_array[i].code_card == "S" || data_array[i].code_card == "JK"){
+                  data_win.push(data_array[i])
+              }
+            }
+          }
       }
       if(flag_func == false){
         data_win = [];
@@ -523,124 +589,150 @@
       }
       let temp = [];
       for(let prop in counts){
-        if (counts[prop] >= 5){
+        if (counts[prop] >= 3){
               temp.push(prop + ":" + counts[prop])
           }
       }
+      
       if(temp.length > 0){
-        let objdata_final = []
-        let temp_string = ""
-        let temp_result;
-        for(let i=0;i<data_array.length;i++){
-            temp_string = temp[0]
-            temp_result = temp_string.split(":");
-            if(temp_result[0] == data_array[i].code_card){
-              objdata_final.push(data_array[i].val_display)
+        for(let z=0;z<temp.length;z++){
+          let objdata_final = []
+          let temp_string = temp[z]
+          let temp_result = temp_string.split(":");
+          if(parseInt(temp_result[1]) == 5){
+            for(let i=0;i<data_array.length;i++){
+                if(temp_result[0] == data_array[i].code_card){
+                  objdata_final.push(data_array[i].val_display)
+                }
             }
-        }
-        let flag = []
-        flag[0] = checkArray(pattern_stright_1,objdata_final)
-        flag[1] = checkArray(pattern_stright_2,objdata_final)
-        flag[2] = checkArray(pattern_stright_3,objdata_final)
-        flag[3] = checkArray(pattern_stright_4,objdata_final)
-        flag[4] = checkArray(pattern_stright_5,objdata_final)
-        flag[5] = checkArray(pattern_stright_6,objdata_final)
-        flag[6] = checkArray(pattern_stright_7,objdata_final)
-        flag[7] = checkArray(pattern_stright_8,objdata_final)
-        flag[8] = checkArray(pattern_stright_9,objdata_final)
-        flag[9] = checkArray(pattern_stright_10,objdata_final)
-  
-        for(let i=0;i<flag.length;i++){
-          if(flag[i] == true){
-            info_result = "STRAIGHT FLUSH"
-            info_card = pattern_stright_10
-            flag_func = true;
-  
-            switch(i){
-              case 0:
-                for(let t=0;t<pattern_stright_1.length;t++){
-                  let temp_data = data_array.find(card => card.val_display == pattern_stright_1[t])
-                  if(temp_data != undefined){
-                    data_win.push(temp_data)
+          
+            let flag = []
+            flag[0] = checkArray(pattern_stright_1,objdata_final)
+            flag[1] = checkArray(pattern_stright_2,objdata_final)
+            flag[2] = checkArray(pattern_stright_3,objdata_final)
+            flag[3] = checkArray(pattern_stright_4,objdata_final)
+            flag[4] = checkArray(pattern_stright_5,objdata_final)
+            flag[5] = checkArray(pattern_stright_6,objdata_final)
+            flag[6] = checkArray(pattern_stright_7,objdata_final)
+            flag[7] = checkArray(pattern_stright_8,objdata_final)
+            flag[8] = checkArray(pattern_stright_9,objdata_final)
+            flag[9] = checkArray(pattern_stright_10,objdata_final)
+            for(let i=0;i<flag.length;i++){
+              if(flag[i] == true){
+                info_result = "STRAIGHT FLUSH"
+                info_card = pattern_stright_10
+                flag_func = true;
+                
+              
+                for(let i=0;i<data_array.length;i++){
+                  temp_string = temp[0]
+                  temp_result = temp_string.split(":");
+                  if(temp_result[0] == data_array[i].code_card){
+                    data_win.push(data_array[i])
                   }
                 }
                 break;
-              case 1:
-                for(let t=0;t<pattern_stright_2.length;t++){
-                  let temp_data = data_array.find(card => card.val_display == pattern_stright_2[t])
-                  if(temp_data != undefined){
-                    data_win.push(temp_data)
-                  }
-                }
-                break;
-              case 2:
-                for(let t=0;t<pattern_stright_3.length;t++){
-                  let temp_data = data_array.find(card => card.val_display == pattern_stright_3[t])
-                  if(temp_data != undefined){
-                    data_win.push(temp_data)
-                  }
-                }
-                break;
-              case 3:
-                for(let t=0;t<pattern_stright_4.length;t++){
-                  let temp_data = data_array.find(card => card.val_display == pattern_stright_4[t])
-                  if(temp_data != undefined){
-                    data_win.push(temp_data)
-                  }
-                }
-                break;
-              case 4:
-                for(let t=0;t<pattern_stright_5.length;t++){
-                  let temp_data = data_array.find(card => card.val_display == pattern_stright_5[t])
-                  if(temp_data != undefined){
-                    data_win.push(temp_data)
-                  }
-                }
-                break;
-              case 5:
-                for(let t=0;t<pattern_stright_6.length;t++){
-                  let temp_data = data_array.find(card => card.val_display == pattern_stright_6[t])
-                  if(temp_data != undefined){
-                    data_win.push(temp_data)
-                  }
-                }
-                break;
-              case 6:
-                for(let t=0;t<pattern_stright_7.length;t++){
-                  let temp_data = data_array.find(card => card.val_display == pattern_stright_7[t])
-                  if(temp_data != undefined){
-                    data_win.push(temp_data)
-                  }
-                }
-                break;
-              case 7:
-                for(let t=0;t<pattern_stright_8.length;t++){
-                  let temp_data = data_array.find(card => card.val_display == pattern_stright_8[t])
-                  if(temp_data != undefined){
-                    data_win.push(temp_data)
-                  }
-                }
-                break;
-              case 8:
-                for(let t=0;t<pattern_stright_9.length;t++){
-                  let temp_data = data_array.find(card => card.val_display == pattern_stright_9[t])
-                  if(temp_data != undefined){
-                    data_win.push(temp_data)
-                  }
-                }
-                break;
-              case 9:
-                for(let t=0;t<pattern_stright_10.length;t++){
-                  let temp_data = data_array.find(card => card.val_display == pattern_stright_10[t])
-                  if(temp_data != undefined){
-                    data_win.push(temp_data)
-                  }
-                }
-                break;
+              }
             }
-            // credit_animation(credit,2,totalbet)
+          }
+          if(parseInt(temp_result[1]) == 4){
+            for(let i=0;i<data_array.length;i++){
+                if(temp_result[0] == data_array[i].code_card){
+                  objdata_final.push(data_array[i].val_display)
+                }
+            }
            
-            break;
+            let flag = []
+            flag[0] = checkArray(pattern_4_1,objdata_final)
+            flag[1] = checkArray(pattern_4_2,objdata_final)
+            flag[2] = checkArray(pattern_4_3,objdata_final)
+            flag[3] = checkArray(pattern_4_4,objdata_final)
+            flag[4] = checkArray(pattern_4_5,objdata_final)
+            flag[5] = checkArray(pattern_4_6,objdata_final)
+            flag[6] = checkArray(pattern_4_7,objdata_final)
+            flag[7] = checkArray(pattern_4_8,objdata_final)
+            flag[8] = checkArray(pattern_4_9,objdata_final)
+            flag[9] = checkArray(pattern_4_10,objdata_final)
+            flag[10] = checkArray(pattern_4_11,objdata_final)
+            
+            for(let i=0;i<flag.length;i++){
+              if(flag[i] == true){
+                let total_jk = 0;
+                let total_card = 0;
+                for(let i=0;i<data_array.length;i++){
+                  if(data_array[i].code_card == "JK"){
+                    total_jk = total_jk + 1
+                  }
+                }
+                total_card = parseInt(temp_result[1]) + total_jk
+                
+                if(parseInt(total_card) == 5){
+                  info_result = "STRAIGHT FLUSH"
+                  info_card = pattern_stright_10
+                  flag_func = true;
+                  
+                
+                  for(let i=0;i<data_array.length;i++){
+                    temp_string = temp[0]
+                    temp_result = temp_string.split(":");
+                    if(temp_result[0] == data_array[i].code_card || data_array[i].code_card == "JK"){
+                      data_win.push(data_array[i])
+                    }
+                  }
+                  break;
+                }
+              }
+            }
+          }
+          if(parseInt(temp_result[1]) == 3){
+            for(let i=0;i<data_array.length;i++){
+                if(temp_result[0] == data_array[i].code_card){
+                  objdata_final.push(data_array[i].val_display)
+                }
+            }
+          
+            let flag = []
+            flag[0] = checkArray(pattern_3_1,objdata_final)
+            flag[1] = checkArray(pattern_3_2,objdata_final)
+            flag[2] = checkArray(pattern_3_3,objdata_final)
+            flag[3] = checkArray(pattern_3_4,objdata_final)
+            flag[4] = checkArray(pattern_3_5,objdata_final)
+            flag[5] = checkArray(pattern_3_6,objdata_final)
+            flag[6] = checkArray(pattern_3_7,objdata_final)
+            flag[7] = checkArray(pattern_3_8,objdata_final)
+            flag[8] = checkArray(pattern_3_9,objdata_final)
+            flag[9] = checkArray(pattern_3_10,objdata_final)
+            flag[10] = checkArray(pattern_3_11,objdata_final)
+            flag[11] = checkArray(pattern_3_12,objdata_final)
+           
+            for(let i=0;i<flag.length;i++){
+              if(flag[i] == true){
+                let total_jk = 0;
+                let total_card = 0;
+                for(let i=0;i<data_array.length;i++){
+                  if(data_array[i].code_card == "JK"){
+                    total_jk = total_jk + 1
+                  }
+                }
+                total_card = parseInt(temp_result[1]) + total_jk
+                
+                if(parseInt(total_card) == 5){
+                  info_result = "STRAIGHT FLUSH"
+                  info_card = pattern_stright_10
+                  flag_func = true;
+                  
+                
+                  for(let i=0;i<data_array.length;i++){
+                    temp_string = temp[0]
+                    temp_result = temp_string.split(":");
+                    if(temp_result[0] == data_array[i].code_card || data_array[i].code_card == "JK"){
+                      data_win.push(data_array[i])
+                    }
+                  }
+                  break;
+                }
+              }
+            }
           }
         }
       }
