@@ -151,6 +151,7 @@
     .then(blob => {
       const img = new Image()
       img.src = URL.createObjectURL(blob);
+      img.style.display="none"
       document.body.appendChild(img);
       // Create new URL to blob image, set as src of image and append to DOM
     })
