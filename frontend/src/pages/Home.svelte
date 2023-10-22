@@ -754,10 +754,11 @@
       }
       let temp = [];
       for(let prop in counts){
-        if (counts[prop] >= 4){
+        if (counts[prop] >= 3){
               temp.push(prop + ":" + counts[prop])
           }
       }
+      // console.log(temp)
       let total = 0;
       let total_temp = temp.length
       let temp_string = ""
@@ -767,6 +768,29 @@
           temp_result = temp_string.split(":");
           total = total + parseInt(temp_result[1])
       }
+      // console.log(total)
+      if(total == 3){//FOUR OF KIND
+        info_result = "FOUR OF KIND"
+        info_card = temp
+        flag_func = true
+        
+        for(let i=0;i<temp.length;i++){
+          temp_string = temp[i]
+          temp_result = temp_string.split(":");
+          for(let j=0;j<data_array.length;j++){
+            if(data_array[j].val == temp_result[0]){
+              data_win.push(data_array[j])
+            }
+          }
+        }
+        for(let j=0;j<data_array.length;j++){
+            if(data_array[j].val == "JK"){
+              data_win.push(data_array[j])
+              break;
+            }
+        }
+        // credit_animation(credit,3,totalbet)
+      }
       if(total == 4){//FOUR OF KIND
         info_result = "FOUR OF KIND"
         info_card = temp
@@ -775,14 +799,46 @@
         for(let i=0;i<temp.length;i++){
           temp_string = temp[i]
           temp_result = temp_string.split(":");
-          for(let i=0;i<data_array.length;i++){
-            if(data_array[i].val == temp_result[0]){
-              data_win.push(data_array[i])
+          for(let j=0;j<data_array.length;j++){
+            if(data_array[j].val == temp_result[0]){
+              data_win.push(data_array[j])
             }
           }
         }
   
         // credit_animation(credit,3,totalbet)
+      }
+      if(total == 6){
+        let data_baru = []
+        for(let i=0;i<temp.length;i++){
+          temp_string = temp[i]
+          temp_result = temp_string.split(":");
+          if(parseInt(temp_result[1]) == 3){
+            data_baru.push(temp[i])
+            
+          }
+        }
+        for(let i=0;i<data_baru.length-1;i++){
+          let temp_string2 = data_baru[i]
+          let temp_result2 = temp_string2.split(":");
+          
+          for(let j=0;j<data_array.length;j++){
+            if(data_array[j].val == temp_result2[0]){
+              data_win.push(data_array[j])
+            }
+          }
+        }
+        for(let j=0;j<data_array.length;j++){
+            if(data_array[j].val == "JK"){
+              data_win.push(data_array[j])
+            }
+        }
+        if(data_win.length == 4){
+          info_result = "FOUR OF KIND"
+          info_card = temp
+          flag_func = true
+          
+        }
       }
       if(flag_func == false){
         data_win = [];
@@ -817,6 +873,7 @@
           temp_result = temp_string.split(":");
           total = total + parseInt(temp_result[1])
       }
+     
       if(total == 4){
         for(let i=0;i<data_array.length;i++){
           if(data_array[i].val == "JK"){
@@ -840,6 +897,7 @@
               }
           }
         }
+        // console.log(total_all)
       }
       if(total == 5){//FULL HOUSE
         if(temp.length == 2){
@@ -857,6 +915,44 @@
               }
           }
           // credit_animation(credit,4,totalbet)
+        }
+      }
+      if(total == 6){
+        if(temp.length == 2){
+          info_result = "FULL HOUSE"
+          info_card = temp
+          flag_func = true
+          
+          for(let i=0;i<temp.length;i++){
+              temp_string = temp[i]
+              temp_result = temp_string.split(":");
+              for(let i=0;i<data_array.length-1;i++){
+                if(data_array[i].val == temp_result[0]){
+                  data_win.push(data_array[i])
+                }
+              }
+          }
+        }else{
+          info_result = "FULL HOUSE"
+          info_card = temp
+          flag_func = true
+          
+          for(let i=0;i<temp.length-1;i++){
+              temp_string = temp[i]
+              temp_result = temp_string.split(":");
+              for(let i=0;i<data_array.length;i++){
+                if(data_array[i].val == temp_result[0]){
+                  data_win.push(data_array[i])
+                }
+              }
+          }
+          if(data_win.length < 5){
+            for(let i=0;i<data_array.length;i++){
+              if(data_array[i].val == "JK"){
+                data_win.push(data_array[i])
+              }
+            }
+          }
         }
       }
       if(flag_func == false){
