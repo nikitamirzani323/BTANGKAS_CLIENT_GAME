@@ -20,7 +20,7 @@
   let client_username = "";
   let client_name = "";
   let client_listbet = [];
-
+  let loader_progress = 0
   const card_result_data = [
     {id:"2_diamond",val:"2",val_display:2,code_card:"D",img:"./CARD/WHITE/CARD_RED_DIAMOND_2.png"},
     {id:"3_diamond",val:"3",val_display:3,code_card:"D",img:"./CARD/WHITE/CARD_RED_DIAMOND_3.png"},
@@ -105,9 +105,8 @@
       if (json.status === 400) {
           // logout();
       } else if (json.status == 403) {
-          alert(json.message);
+          // alert(json.message);
       } else {
-          console.log(json)
           flag_game = true;
           client_company = json.client_company;
           client_name = json.client_name;
@@ -116,22 +115,64 @@
           client_listbet = json.client_listbet.record;
       }
   }
+
+  for(let i=0;i<card_result_data.length;i++){
+    loader_progress = 0
+    fetch(card_result_data[i].img)
+    .then(response => {
+      const contentLength = response.headers.get('content-length');
+      let loaded = 0;
+      return new Response(
+        new ReadableStream({
+          start(controller) {
+            const reader = response.body.getReader();
+            read();
+            function read() {
+              reader.read()
+              .then((progressEvent) => {
+                if (progressEvent.done) {
+                  controller.close();
+                  return; 
+                }
+                
+                loaded += progressEvent.value.byteLength;
+                //asdasd
+                loader_progress = Math.round(loaded/contentLength*100);
+                controller.enqueue(progressEvent.value);
+                read();
+
+              })
+            }
+          }
+        })
+      );
+    })
+    .then(response => response.blob()) // Read new readable stream to blob
+    .then(blob => {
+      const img = new Image()
+      img.src = URL.createObjectURL(blob);
+      document.body.appendChild(img);
+      // Create new URL to blob image, set as src of image and append to DOM
+    })
+  }
 </script>
 
-<main class="container mx-auto px-2 text-base-content glass xl:rounded-box xl:mt-7 max-w-screen-xl bg-opacity-60 pb-5 h-fit lg:h-full">
-  {#if flag_game}
-    <Home
-    {path_api} 
-    {token_browser} 
-    {client_company} 
-    {client_timezone} 
-    {client_ipaddress} 
-    {client_username} 
-    {client_name} 
-    {client_credit} 
-    {client_listbet} />
+  {#if flag_game &&  (parseInt(loader_progress) == 100)}
+    <main class="container mx-auto px-2 text-base-content glass xl:rounded-box xl:mt-7 max-w-screen-xl bg-opacity-60 pb-5 h-fit lg:h-full">
+      <Home
+        {path_api} 
+        {token_browser} 
+        {client_company} 
+        {client_timezone} 
+        {client_ipaddress} 
+        {client_username} 
+        {client_name} 
+        {client_credit} 
+        {client_listbet} />
+    </main>
+  {:else}
+  <main class="container mx-auto px-2 text-base-content glass xl:rounded-box xl:mt-7 max-w-screen-xl bg-opacity-60 pb-5 h-fit lg:h-[650px]"></main>
   {/if}
-</main>
 
 <footer class="footer footer-center p-4 text-base-content mt-2 text-center select-none">
   <div class="grid">
@@ -146,11 +187,7 @@
 
 
 
-<div class="hidden">
-{#each card_result_data as rec}
-  <img src="{rec.img}" alt="" srcset="">
-{/each}
-</div>
+
 <style global lang="postcss">
   @tailwind base;
   @tailwind components;

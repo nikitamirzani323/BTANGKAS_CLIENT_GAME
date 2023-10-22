@@ -28,13 +28,26 @@
     let sound = 0;
     let flag_minimalbet = false;
     let path_card = "CARD/WHITE/";
+    let list_point_db = [];
     if(client_listbet != null){
       for(let i=0;i<client_listbet.length;i++){
         if(i==0){
           min_bet = client_listbet[i].lisbet_minbet
+          for(let j=0;j<client_listbet[i].lisbet_config.length;j++){
+            list_point_db = [
+                ...list_point_db,
+                {
+                  lispoin_id: client_listbet[i].lisbet_config[j].lispoin_id,
+                  lispoin_nmpoin: client_listbet[i].lisbet_config[j].lispoin_nmpoin,
+                  lispoin_poin: client_listbet[i].lisbet_config[j].lispoin_poin,
+                },
+            ];
+          }
         }
+        
       }
     }
+    // console.log(list_point_db)
     let spin = [
       new Audio("/sounds/spin.mp3"),
     ];
@@ -42,17 +55,29 @@
       new Audio("/sounds/win.mp3"),
       new Audio("/sounds/win.mp3"),
     ];
+    // let list_point22 = [
+    //   {id:"1",code:"RF",name:"Royal Flush",poin:500},
+    //   {id:"2",code:"5K",name:"5 Of A Kind",poin:200},
+    //   {id:"3",code:"SF",name:"Straight Flush",poin:120},
+    //   {id:"4",code:"4K",name:"4 Of A Kind",poin:50},
+    //   {id:"5",code:"FH",name:"Full House",poin:7},
+    //   {id:"6",code:"FL",name:"Flush",poin:5},
+    //   {id:"7",code:"ST",name:"Straight",poin:3},
+    //   {id:"8",code:"3K",name:"3 Of A Kind",poin:2},
+    //   {id:"9",code:"2P",name:"2 Pair (10 PAIR)",poin:1},
+    //   {id:"10",code:"AP",name:"Ace Pair",poin:1},
+    // ]
     let list_point = [
-      {id:"1",code:"RF",name:"Royal Flush",poin:500},
-      {id:"2",code:"5K",name:"5 Of A Kind",poin:200},
-      {id:"3",code:"SF",name:"Straight Flush",poin:120},
-      {id:"4",code:"4K",name:"4 Of A Kind",poin:50},
-      {id:"5",code:"FH",name:"Full House",poin:7},
-      {id:"6",code:"FL",name:"Flush",poin:5},
-      {id:"7",code:"ST",name:"Straight",poin:3},
-      {id:"8",code:"3K",name:"3 Of A Kind",poin:2},
-      {id:"9",code:"2P",name:"2 Pair (10 PAIR)",poin:1},
-      {id:"10",code:"AP",name:"Ace Pair",poin:1},
+      {id:"1",code:"RF",name:"Royal Flush",poin:0},
+      {id:"2",code:"5K",name:"5 Of A Kind",poin:0},
+      {id:"3",code:"SF",name:"Straight Flush",poin:0},
+      {id:"4",code:"4K",name:"4 Of A Kind",poin:0},
+      {id:"5",code:"FH",name:"Full House",poin:0},
+      {id:"6",code:"FL",name:"Flush",poin:0},
+      {id:"7",code:"ST",name:"Straight",poin:0},
+      {id:"8",code:"3K",name:"3 Of A Kind",poin:0},
+      {id:"9",code:"2P",name:"2 Pair (10 PAIR)",poin:0},
+      {id:"10",code:"AP",name:"Ace Pair",poin:0},
     ]
     const card_result_data = [
       {id:"2_diamond",val:"2",val_display:2,code_card:"D",img:"./CARD/WHITE/CARD_RED_DIAMOND_2.png"},
@@ -383,7 +408,7 @@
           }
         }
       }
-      // console.log("POINT : " + data_result[2])
+     
       
       return [data_result[0],data_result[1],data_result[2]]
     }
@@ -758,7 +783,6 @@
               temp.push(prop + ":" + counts[prop])
           }
       }
-      // console.log(temp)
       let total = 0;
       let total_temp = temp.length
       let temp_string = ""
@@ -768,7 +792,6 @@
           temp_result = temp_string.split(":");
           total = total + parseInt(temp_result[1])
       }
-      // console.log(total)
       if(total == 3){//FOUR OF KIND
         info_result = "FOUR OF KIND"
         info_card = temp
@@ -1870,16 +1893,16 @@
       // c_after = credit;
     }
     
-    
+  
     function credit_animation_factory(credit_before,total_bet,data_win,n){
-      let point = (list_point[n].poin* total_bet)*parseInt(min_bet);
+      let point = (list_point_db[n].lispoin_poin* total_bet)*parseInt(min_bet);
       point_result = "+" + point
-      let credit_target = credit_before + ((list_point[n].poin* total_bet)*parseInt(min_bet))
+      let credit_target = credit_before + ((list_point_db[n].lispoin_poin* total_bet)*parseInt(min_bet))
       
       animateValue(credit, credit_target, 500)
       point_style_result = "text-secondary font-bold";
       list_point_style = "bg-slate-500"
-      list_point_id = list_point[n].id
+      list_point_id = list_point_db[n].lispoin_id
       console.log("POINT ID :" + list_point_id)
       c_before = credit;
       credit = credit - (parseInt(min_bet) * totalbet);
@@ -1903,7 +1926,7 @@
 
      
      
-      for(let j=0;j<data_win.length;j++){
+    for(let j=0;j<data_win.length;j++){
           let flag_data = true;
           var result = shuffleArray.find(item => item.id === data_win[j].id);
           if(result.id != ""){
@@ -1953,7 +1976,7 @@
         
        
       
-      sendData(total_bet,0,c_before,credit_target,point,list_point[n].code,info_result,shuffleArray,data_win,"WIN")
+      sendData(total_bet,0,c_before,credit_target,point,list_point_db[n].lispoin_id,info_result,shuffleArray,data_win,"WIN")
   
       flag_all = false
     }
@@ -2017,14 +2040,11 @@
         status_transaction: data_statustransaksi
       };
       list_datasend = [...list_datasend,objSend]
-      console.log("code win : "+code_win)
-      // console.log("note win : "+note_win)
       
       list_datasend.sort((a, b) => b.id_transaksi - a.id_transaksi);
 
       let resultwin = "";
       let total_datawin = data_resultcardwin.length
-      // console.log("total datawin : "+total_datawin)
       for(let i=0; i<total_datawin; i++){
         if(i==total_datawin-1){
           resultwin += data_resultcardwin[i].id
@@ -2032,9 +2052,7 @@
           resultwin += data_resultcardwin[i].id + ","
         }
       }
-      // console.log("STATUS : "+data_statustransaksi)
-      // console.log("round bet : "+data_roundbet)
-      // console.log("IDTRANSAKSI : "+idtransaksi)
+     
       if(data_roundbet == 1 || data_roundbet == 4){ 
         if(idtransaksi == ""){
           savetransaksi(data_roundbet,data_minbet,data_cbefore,data_cafter,data_win,code_win,resultwin,data_statustransaksi)
@@ -2057,7 +2075,23 @@
         }
     };
     const handle_minbet = (e) => {
-        min_bet = parseInt(e)
+        list_point_db = []
+        for(let i=0;i<client_listbet.length;i++){
+          if(client_listbet[i].lisbet_minbet == parseInt(e)){
+            min_bet = client_listbet[i].lisbet_minbet
+            for(let j=0;j<client_listbet[i].lisbet_config.length;j++){
+              list_point_db = [
+                  ...list_point_db,
+                  {
+                    lispoin_id: client_listbet[i].lisbet_config[j].lispoin_id,
+                    lispoin_nmpoin: client_listbet[i].lisbet_config[j].lispoin_nmpoin,
+                    lispoin_poin: client_listbet[i].lisbet_config[j].lispoin_poin,
+                  },
+              ];
+            }
+          }
+        }
+
         isModalMinBet = false
     };
     const call_allinvoice = () => {
@@ -2084,8 +2118,7 @@
           }
         }
       }
-      console.log(f)
-      console.log(list_detailtransaksi_win)
+
     };
     const call_carabermain = () => {
       isModal_carabermain = true
@@ -2303,45 +2336,46 @@
   
     <section class="w-full select-none rounded-md p-2 mt-2 bg-base-100  ">
       <div class="grid grid-cols-2 w-full ">
-        <div class="flex w-full pr-2 lg:pr-5 {list_point[0]["id"] == list_point_id ? list_point_style:''}">
+   
+        <div class="flex w-full pr-2 lg:pr-5 {list_point_db[0]["lispoin_id"] == list_point_id ? list_point_style:''}">
           <div class="w-full text-xs lg:text-sm whitespace-nowrap">{list_point[0]["name"]}</div>
-          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point[0]["poin"]*totalbet)*parseInt(min_bet))}</div>
+          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point_db[0]["lispoin_poin"]*totalbet)*parseInt(min_bet))}</div>
         </div>
-        <div class="flex w-full pr-2 lg:pr-5 {list_point[5]["id"] == list_point_id ? list_point_style:''}">
+        <div class="flex w-full pr-2 lg:pr-5 {list_point_db[5]["lispoin_id"] == list_point_id ? list_point_style:''}">
           <div class="w-full text-xs lg:text-sm whitespace-nowrap">{list_point[5]["name"]}</div>
-          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point[5]["poin"]*totalbet)*parseInt(min_bet))}</div>
+          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point_db[5]["lispoin_poin"]*totalbet)*parseInt(min_bet))}</div>
         </div>
-        <div class="flex w-full pr-2 lg:pr-5 {list_point[1]["id"] == list_point_id ? list_point_style:''}">
+        <div class="flex w-full pr-2 lg:pr-5 {list_point_db[1]["lispoin_id"] == list_point_id ? list_point_style:''}">
           <div class="w-full text-xs lg:text-sm whitespace-nowrap">{list_point[1]["name"]}</div>
-          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point[1]["poin"]*totalbet)*parseInt(min_bet))}</div>
+          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point_db[1]["lispoin_poin"]*totalbet)*parseInt(min_bet))}</div>
         </div>
-        <div class="flex w-full pr-2 lg:pr-5 {list_point[6]["id"] == list_point_id ? list_point_style:''}">
+        <div class="flex w-full pr-2 lg:pr-5 {list_point_db[6]["lispoin_id"] == list_point_id ? list_point_style:''}">
           <div class="w-full text-xs lg:text-sm whitespace-nowrap">{list_point[6]["name"]}</div>
-          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point[6]["poin"]*totalbet)*parseInt(min_bet))}</div>
+          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point_db[6]["lispoin_poin"]*totalbet)*parseInt(min_bet))}</div>
         </div>
-        <div class="flex w-full pr-2 lg:pr-5 {list_point[2]["id"] == list_point_id ? list_point_style:''}">
+        <div class="flex w-full pr-2 lg:pr-5 {list_point_db[2]["lispoin_id"] == list_point_id ? list_point_style:''}">
           <div class="w-full text-xs lg:text-sm whitespace-nowrap">{list_point[2]["name"]}</div>
-          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point[2]["poin"]*totalbet)*parseInt(min_bet))}</div>
+          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point_db[2]["lispoin_poin"]*totalbet)*parseInt(min_bet))}</div>
         </div>
-        <div class="flex w-full pr-2 lg:pr-5 {list_point[7]["id"] == list_point_id ? list_point_style:''}">
+        <div class="flex w-full pr-2 lg:pr-5 {list_point_db[7]["lispoin_id"] == list_point_id ? list_point_style:''}">
           <div class="w-full text-xs lg:text-sm whitespace-nowrap">{list_point[7]["name"]}</div>
-          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point[7]["poin"]*totalbet)*parseInt(min_bet))}</div>
+          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point_db[7]["lispoin_poin"]*totalbet)*parseInt(min_bet))}</div>
         </div>
-        <div class="flex w-full pr-2 lg:pr-5 {list_point[3]["id"] == list_point_id ? list_point_style:''}">
+        <div class="flex w-full pr-2 lg:pr-5 {list_point_db[3]["lispoin_id"] == list_point_id ? list_point_style:''}">
           <div class="w-full text-xs lg:text-sm whitespace-nowrap">{list_point[3]["name"]}</div>
-          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point[3]["poin"]*totalbet)*parseInt(min_bet))}</div>
+          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point_db[3]["lispoin_poin"]*totalbet)*parseInt(min_bet))}</div>
         </div>
-        <div class="flex w-full pr-2 lg:pr-5 {list_point[8]["id"] == list_point_id ? list_point_style:''}">
+        <div class="flex w-full pr-2 lg:pr-5 {list_point_db[8]["lispoin_id"] == list_point_id ? list_point_style:''}">
           <div class="w-full text-xs lg:text-sm whitespace-nowrap">{list_point[8]["name"]}</div>
-          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point[8]["poin"]*totalbet)*parseInt(min_bet))}</div>
+          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point_db[8]["lispoin_poin"]*totalbet)*parseInt(min_bet))}</div>
         </div>
-        <div class="flex w-full pr-2 lg:pr-5 {list_point[4]["id"] == list_point_id ? list_point_style:''}">
+        <div class="flex w-full pr-2 lg:pr-5 {list_point_db[4]["lispoin_id"] == list_point_id ? list_point_style:''}">
           <div class="w-full text-xs lg:text-sm whitespace-nowrap">{list_point[4]["name"]}</div>
-          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point[4]["poin"]*totalbet)*parseInt(min_bet))}</div>
+          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point_db[4]["lispoin_poin"]*totalbet)*parseInt(min_bet))}</div>
         </div>
-        <div class="flex w-full  pr-2 lg:pr-5 {list_point[9]["id"] == list_point_id ? list_point_style:''}">
+        <div class="flex w-full  pr-2 lg:pr-5 {list_point_db[9]["lispoin_id"] == list_point_id ? list_point_style:''}">
           <div class="w-full text-xs lg:text-sm whitespace-nowrap">{list_point[9]["name"]}</div>
-          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point[9]["poin"]*totalbet)*parseInt(min_bet))}</div>
+          <div class="w-full text-xs lg:text-sm whitespace-nowrap text-right link-accent">{new Intl.NumberFormat().format((list_point_db[9]["lispoin_poin"]*totalbet)*parseInt(min_bet))}</div>
         </div>
       </div>
       
@@ -2481,7 +2515,7 @@
       <label for="my-modal-carabermain" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
       <h3 class="text-xs lg:text-sm font-bold -mt-1">CARA BERMAIN</h3>
       <div class="overflow-auto h-[90%] scrollbar-thin scrollbar-thumb-green-100 mt-4">
-          <p>
+          <p class="text-sm">
             Mickey Mouse Bolatangkas adalah permainan dengan menggunakan tujuh buah kartu yang akan dibagikan secara random pada setiap putaran permainan 
             sehingga pemain bisa mendapatkan susunan kartu yang ditentukan dan tertinggi untuk mencapai kemenangan. sebelum bermain silahkan login dan masuk ke 
             permainan Mickey Mouse Bolatangkas terlebih dahulu.<br />
@@ -2499,16 +2533,16 @@
             Fold, klik untung membuang kartu<br /><br />
             Sesuai dengan nilai kartu yang didapatkan apabila pemain menang berikut adalah susunan set kartu dari yang terkecil hingga yang tertinggi
             <br /><br />
-            royal flush : kombinasi dari kartu ace, king, queen, jack, dan 10 dengan jenis yang sama<br />
-            5 of a kind : kombinasi dari four of a kind dan kartu joker<br />
-            straight flush : kombinasi dari straight dan flush<br />
-            4 of a kind : kombinasi dari 4 kartu yang sama<br />
-            full house : kombinasi dari 3 kartu dan 2 kartu yang sama<br />
-            flush : kombinasi dari 5 kartu yang memiliki jenis yang sama<br />
-            straight : kombinasi 5 kartu yang berurutan<br />
-            3 of a kind : kombinasi dari 3 kartu yang sama<br />
-            2 pair ( 10 pair ) : kombinasi dari 2 pasang kartu yang sama dengan catatan nilai kartu diatas 10<br />
-            ace pair : kombinasi dari 2 kartu ace yang sama<br />
+            - Royal flush : kombinasi dari kartu ace, king, queen, jack, dan 10 dengan jenis yang sama<br />
+            - 5 of a kind : kombinasi dari four of a kind dan kartu joker<br />
+            - Straight flush : kombinasi dari straight dan flush<br />
+            - 4 of a kind : kombinasi dari 4 kartu yang sama<br />
+            - Full house : kombinasi dari 3 kartu dan 2 kartu yang sama<br />
+            - Flush : kombinasi dari 5 kartu yang memiliki jenis yang sama<br />
+            - Straight : kombinasi 5 kartu yang berurutan<br />
+            - 3 of a kind : kombinasi dari 3 kartu yang sama<br />
+            - 2 pair ( 10 pair ) : kombinasi dari 2 pasang kartu yang sama dengan catatan nilai kartu diatas 10<br />
+            - Ace pair : kombinasi dari 2 kartu ace yang sama<br />
           </p>
       </div>
     </div>
