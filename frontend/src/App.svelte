@@ -115,7 +115,7 @@
           client_listbet = json.client_listbet.record;
       }
   }
-
+  
   for(let i=0;i<card_result_data.length;i++){
     loader_progress = 0
     fetch(card_result_data[i].img)
@@ -156,6 +156,7 @@
       // Create new URL to blob image, set as src of image and append to DOM
     })
   }
+
 </script>
 
   {#if flag_game &&  (parseInt(loader_progress) == 100)}

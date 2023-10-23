@@ -16,11 +16,10 @@
     export let client_listbet = [];
   
    
+
     let clockmachine = "";
     let clockmachine_data = "";
     let credit = client_credit;
-    let temp_credit = credit;
-    let list_min_bet = [100,500,1000,1500,5000,10000,25000]
     let idtransaksi = ""
     let tipe_click = ""
     let min_bet = "0"
@@ -29,25 +28,28 @@
     let flag_minimalbet = false;
     let path_card = "CARD/WHITE/";
     let list_point_db = [];
+
+
     if(client_listbet != null){
-      for(let i=0;i<client_listbet.length;i++){
-        if(i==0){
-          min_bet = client_listbet[i].lisbet_minbet
-          for(let j=0;j<client_listbet[i].lisbet_config.length;j++){
-            list_point_db = [
-                ...list_point_db,
-                {
-                  lispoin_id: client_listbet[i].lisbet_config[j].lispoin_id,
-                  lispoin_nmpoin: client_listbet[i].lisbet_config[j].lispoin_nmpoin,
-                  lispoin_poin: client_listbet[i].lisbet_config[j].lispoin_poin,
-                },
-            ];
+        for(let i=0;i<client_listbet.length;i++){
+          if(i==0){
+            min_bet = client_listbet[i].lisbet_minbet
+            for(let j=0;j<client_listbet[i].lisbet_config.length;j++){
+              list_point_db = [
+                  ...list_point_db,
+                  {
+                    lispoin_id: client_listbet[i].lisbet_config[j].lispoin_id,
+                    lispoin_nmpoin: client_listbet[i].lisbet_config[j].lispoin_nmpoin,
+                    lispoin_poin: client_listbet[i].lisbet_config[j].lispoin_poin,
+                  },
+              ];
+            }
           }
         }
-        
       }
-    }
-    // console.log(list_point_db)
+
+    
+  
     let spin = [
       new Audio("/sounds/spin.mp3"),
     ];
@@ -2311,8 +2313,8 @@
       
         idtransaksi = json.client_idtransaksi
       
-        let card = "8-34-23-47-42-40-15"
-        // let card = json.client_cardgame
+        // let card = "8-34-23-47-42-40-15"
+        let card = json.client_cardgame
         let card_length = parseInt(json.client_cardlength)
         const myArray = card.split("-");
         shuffleArray = [];
@@ -2491,7 +2493,6 @@
         call_carabermain();
       }} class="btn bg-base-300 border-none shadow-lg shadow-green-500/50 btn-xs">CARA BERMAIN</div>
     </section>
-  
     <section class="w-full select-none rounded-md p-2 mt-2 bg-base-100  ">
       <div class="grid grid-cols-2 w-full ">
    
