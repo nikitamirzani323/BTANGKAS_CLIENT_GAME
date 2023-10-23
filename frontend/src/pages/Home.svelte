@@ -783,6 +783,7 @@
               temp.push(prop + ":" + counts[prop])
           }
       }
+      // console.log(temp)
       let total = 0;
       let total_temp = temp.length
       let temp_string = ""
@@ -792,11 +793,10 @@
           temp_result = temp_string.split(":");
           total = total + parseInt(temp_result[1])
       }
+      // console.log(total)
       if(total == 3){//FOUR OF KIND
-        info_result = "FOUR OF KIND"
-        info_card = temp
-        flag_func = true
         
+        let flag_jk = false;
         for(let i=0;i<temp.length;i++){
           temp_string = temp[i]
           temp_result = temp_string.split(":");
@@ -809,8 +809,14 @@
         for(let j=0;j<data_array.length;j++){
             if(data_array[j].val == "JK"){
               data_win.push(data_array[j])
+              flag_jk = true
               break;
             }
+        }
+        if(flag_jk){
+          info_result = "FOUR OF KIND"
+          info_card = temp
+          flag_func = true
         }
         // credit_animation(credit,3,totalbet)
       }
@@ -2305,7 +2311,8 @@
       
         idtransaksi = json.client_idtransaksi
       
-        let card = json.client_cardgame
+        let card = "8-34-23-47-42-40-15"
+        // let card = json.client_cardgame
         let card_length = parseInt(json.client_cardlength)
         const myArray = card.split("-");
         shuffleArray = [];
