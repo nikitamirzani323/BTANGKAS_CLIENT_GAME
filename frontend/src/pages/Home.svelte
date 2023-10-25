@@ -46,10 +46,7 @@
             }
           }
         }
-      }
-
-    
-  
+    }
     let spin = [
       new Audio("/sounds/spin.mp3"),
     ];
@@ -1977,250 +1974,7 @@
           credit_animation_factory(credit,totalbet,status[1],status[2])
         }
     }
-    function shuffleArray_card(array){
-      let i = 0
-      while(i<7){
-        let randomNumber = Math.floor(Math.random() * array.length)
-        if(!usedIndexes.includes(randomNumber)){
-          shuffleArray.push(array[randomNumber]);
-          usedIndexes.push(randomNumber);
-          i++;
-        }
-      }  
-      
-      // shuffleArray = [];
-      // shuffleArray.push(array[10]);
-      // shuffleArray.push(array[39]);
-      // shuffleArray.push(array[17]);
-      // shuffleArray.push(array[53]);
-      // shuffleArray.push(array[26]);
-      // shuffleArray.push(array[11]);
-      // shuffleArray.push(array[19]);
-      // console.log(shuffleArray)
-      
-      
-     
-      // ==== ACE PAIR 1 AS AS===
-      // shuffleArray = [];
-      // shuffleArray.push(array[12]);
-      // shuffleArray.push(array[25]);
-      // shuffleArray.push(array[32]);
-      // shuffleArray.push(array[18]);
-      // shuffleArray.push(array[20]);
-      // shuffleArray.push(array[30]);
-      // shuffleArray.push(array[28]);
-      // console.log(shuffleArray)
-  
-  
-      // ==== ACE PAIR 1 AS JK===
-      // shuffleArray = [];
-      // shuffleArray.push(array[12]);
-      // shuffleArray.push(array[53]);
-      // shuffleArray.push(array[32]);
-      // shuffleArray.push(array[18]);
-      // shuffleArray.push(array[20]);
-      // shuffleArray.push(array[30]);
-      // shuffleArray.push(array[28]);
-      // console.log(shuffleArray)
-      
-  
-      // ==== 2 PAIR ===
-      // shuffleArray = [];
-      // shuffleArray.push(array[8]);
-      // shuffleArray.push(array[21]);
-      // shuffleArray.push(array[22]);
-      // shuffleArray.push(array[48]);
-      // shuffleArray.push(array[49]);
-      // shuffleArray.push(array[30]);
-      // shuffleArray.push(array[28]);
-      // console.log(shuffleArray)
-  
-      // ==== 2 PAIR 1 ===
-      // shuffleArray = [];
-      // shuffleArray.push(array[25]);
-      // shuffleArray.push(array[48]);
-      // shuffleArray.push(array[13]);
-      // shuffleArray.push(array[29]);
-      // shuffleArray.push(array[24]);
-      // shuffleArray.push(array[51]);
-      // shuffleArray.push(array[16]);
-      // console.log(shuffleArray)
-  
-     
-  
-      // ==== 3 kind 1 ===
-      // shuffleArray = [];
-      // shuffleArray.push(array[10]);
-      // shuffleArray.push(array[23]);
-      // shuffleArray.push(array[36]);
-      // shuffleArray.push(array[39]);
-      // shuffleArray.push(array[3]);
-      // shuffleArray.push(array[18]);
-      // shuffleArray.push(array[32]);
-      // console.log(shuffleArray)
-  
-      // ==== 3 kind 2 ===
-      // shuffleArray = [];
-      // shuffleArray.push(array[10]);
-      // shuffleArray.push(array[23]);
-      // shuffleArray.push(array[39]);
-      // shuffleArray.push(array[3]);
-      // shuffleArray.push(array[18]);
-      // shuffleArray.push(array[32]);
-      // shuffleArray.push(array[53]);
-      // console.log(shuffleArray)
-  
-      // ==== 3 kind 3 ===
-      // shuffleArray = [];
-      // shuffleArray.push(array[12]);
-      // shuffleArray.push(array[18]);
-      // shuffleArray.push(array[25]);
-      // shuffleArray.push(array[36]);
-      // shuffleArray.push(array[52]);
-      // shuffleArray.push(array[0]);
-      // shuffleArray.push(array[49]);
-      // console.log(shuffleArray)
-  
-      // ==== STRAIGHT ===
-      // shuffleArray = [];
-      // shuffleArray.push(array[0]);
-      // shuffleArray.push(array[14]);
-      // shuffleArray.push(array[28]);
-      // shuffleArray.push(array[42]);
-      // shuffleArray.push(array[4]);
-      // shuffleArray.push(array[32]);
-      // shuffleArray.push(array[50]);
-      // console.log(shuffleArray)
-  
-      // ==== STRAIGHT 2 ===
-      // shuffleArray = [];
-      // shuffleArray.push(array[0]);
-      // shuffleArray.push(array[14]);
-      // shuffleArray.push(array[28]);
-      // shuffleArray.push(array[42]);
-      // shuffleArray.push(array[4]);
-      // shuffleArray.push(array[32]);
-      // shuffleArray.push(array[16]);
-      // console.log(shuffleArray)
-  
-      // ==== STRAIGHT 3 ===
-      // shuffleArray = [];
-      // shuffleArray.push(array[47]);
-      // shuffleArray.push(array[35]);
-      // shuffleArray.push(array[23]);
-      // shuffleArray.push(array[11]);
-      // shuffleArray.push(array[32]);
-      // shuffleArray.push(array[38]);
-      // shuffleArray.push(array[25]);
-      // console.log(shuffleArray)
-  
-  
-      // ==== FLUSH ===
-      // shuffleArray = [];
-      // shuffleArray.push(array[0]);
-      // shuffleArray.push(array[2]);
-      // shuffleArray.push(array[29]);
-      // shuffleArray.push(array[6]);
-      // shuffleArray.push(array[8]);
-      // shuffleArray.push(array[32]);
-      // shuffleArray.push(array[4]);
-      // console.log(shuffleArray)
-  
-      // ==== FULL HOUSE ===
-      // shuffleArray = [];
-      // shuffleArray.push(array[29]);
-      // shuffleArray.push(array[14]);
-      // shuffleArray.push(array[27]);
-      // shuffleArray.push(array[6]);
-      // shuffleArray.push(array[8]);
-      // shuffleArray.push(array[32]);
-      // shuffleArray.push(array[1]);
-      // console.log(shuffleArray)
-  
-      // ==== FULL HOUSE 2===
-      // shuffleArray = [];
-      // shuffleArray.push(array[35]);
-      // shuffleArray.push(array[3]);
-      // shuffleArray.push(array[23]);
-      // shuffleArray.push(array[9]);
-      // shuffleArray.push(array[21]);
-      // shuffleArray.push(array[48]);
-      // shuffleArray.push(array[42]);
-      // console.log(shuffleArray)
-  
-      // ==== FULL HOUSE ===
-      // shuffleArray = [];
-      // shuffleArray.push(array[1]);
-      // shuffleArray.push(array[14]);
-      // shuffleArray.push(array[27]);
-      // shuffleArray.push(array[6]);
-      // shuffleArray.push(array[8]);
-      // shuffleArray.push(array[32]);
-      // shuffleArray.push(array[29]);
-      // console.log(shuffleArray)
-  
-      // ==== 4 OF A KIND ===
-      // shuffleArray = [];
-      // shuffleArray.push(array[6]);
-      // shuffleArray.push(array[32]);
-      // shuffleArray.push(array[45]);
-      // shuffleArray.push(array[8]);
-      // shuffleArray.push(array[31]);
-      // shuffleArray.push(array[19]);
-      // shuffleArray.push(array[29]);
-      // console.log(shuffleArray)
-  
-      
-  
-      // ==== STRAIGHT FLUSH ===
-      // shuffleArray = [];
-      // shuffleArray.push(array[0]);
-      // shuffleArray.push(array[1]);
-      // shuffleArray.push(array[2]);
-      // shuffleArray.push(array[3]);
-      // shuffleArray.push(array[4]);
-      // shuffleArray.push(array[31]);
-      // shuffleArray.push(array[29]);
-      // console.log(shuffleArray)
-  
-      
-      // ==== 5 OF A KIND 1 ===
-      // shuffleArray = [];
-      // shuffleArray.push(array[0]);
-      // shuffleArray.push(array[13]);
-      // shuffleArray.push(array[26]);
-      // shuffleArray.push(array[39]);
-      // shuffleArray.push(array[52]);
-      // shuffleArray.push(array[31]);
-      // shuffleArray.push(array[29]);
-      // console.log(shuffleArray)
-  
-      
-      // ==== 5 OF A KIND 2 ===
-      // shuffleArray = [];
-      // shuffleArray.push(array[0]);
-      // shuffleArray.push(array[13]);
-      // shuffleArray.push(array[26]);
-      // shuffleArray.push(array[53]);
-      // shuffleArray.push(array[52]);
-      // shuffleArray.push(array[31]);
-      // shuffleArray.push(array[29]);
-      // console.log(shuffleArray)
-  
     
-      // ==== ROYAL FLUSH ===
-      // shuffleArray = [];
-      // shuffleArray.push(array[47]);
-      // shuffleArray.push(array[48]);
-      // shuffleArray.push(array[49]);
-      // shuffleArray.push(array[50]);
-      // shuffleArray.push(array[51]);
-      // shuffleArray.push(array[31]);
-      // shuffleArray.push(array[29]);
-      // console.log(shuffleArray)
-  
-      console.log(shuffleArray)
-    }
     function shuffleArray_bet(){
       if(count_bet == 4){
         flag_bet = false
@@ -2757,7 +2511,7 @@
     <div class="navbar">
       <div class="navbar-start">
         <a href="/?token={token_browser}" >
-            <img src="https://sdsb4d.com/logo-green.svg" alt="SDSB" class="hover:scale-110  transition ">
+            <img src="https://i.imgur.com/PNSe1ov.png" alt="SDSB TANGKAS" class="hover:scale-110  transition w-[200px] ">
         </a>
       </div>
       <div class="navbar-center hidden lg:flex">
@@ -2795,7 +2549,7 @@
       <p class="w-full text-xs  text-left">
         Asia/Jakarta <br />
         {clockmachine}  WIB (+7)<br>
-        developer <br />
+        {client_name} <br />
         {client_ipaddress}
       </p>
       <p class="w-full text-xs  text-right">

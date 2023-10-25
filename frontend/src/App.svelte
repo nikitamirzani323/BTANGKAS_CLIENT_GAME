@@ -183,7 +183,7 @@
       <br />
       PowerBy
     </p>
-    <img src="https://sdsb4d.com/logo-green.svg" alt="SDSB" class="w-24 lg:w-28">
+    <img src="https://i.imgur.com/PNSe1ov.png" alt="SDSB TANGKAS" class="w-24 lg:w-28">
   </div>
 </footer>
 
