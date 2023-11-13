@@ -2388,7 +2388,7 @@
       
         idtransaksi = json.client_idtransaksi
       
-        // let card = "8-34-23-47-42-40-15"
+        // let card = "2-11-52-17-4-23-40"
         let card = json.client_cardgame
         let card_length = parseInt(json.client_cardlength)
         const myArray = card.split("-");
