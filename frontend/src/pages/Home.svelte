@@ -321,32 +321,32 @@
               case 1:
                 flag_deal = true;
                 flag_fullbet = false;
-                c_before = credit;
-                credit = credit - parseInt(min_bet);
-                c_after = credit;
-                point_style_result = "text-error font-bold"
-                point_result = "-" + (totalbet * parseInt(min_bet))
+                // c_before = credit;
+                // credit = credit - parseInt(min_bet);
+                // c_after = credit;
+                // point_style_result = "text-error font-bold"
+                // point_result = "-" + (totalbet * parseInt(min_bet))
                 break;
               case 2:
-                c_before = credit;
-                credit = credit - parseInt(min_bet);
-                c_after = credit;
-                point_style_result = "text-error font-bold"
-                point_result = "-" + (totalbet * parseInt(min_bet))
+                // c_before = credit;
+                // credit = credit - parseInt(min_bet);
+                // c_after = credit;
+                // point_style_result = "text-error font-bold"
+                // point_result = "-" + (totalbet * parseInt(min_bet))
                 break;
               case 3:
-                c_before = credit;
-                credit = credit - parseInt(min_bet);
-                c_after = credit;
-                point_style_result = "text-error font-bold"
-                point_result = "-" + (totalbet * parseInt(min_bet))
+                // c_before = credit;
+                // credit = credit - parseInt(min_bet);
+                // c_after = credit;
+                // point_style_result = "text-error font-bold"
+                // point_result = "-" + (totalbet * parseInt(min_bet))
                 break;
               case 4:
-                c_before = credit;
-                credit = credit - parseInt(min_bet);
-                c_after = credit;
-                point_style_result = "text-error font-bold"
-                point_result = "-" + (totalbet * parseInt(min_bet))
+                // c_before = credit;
+                // credit = credit - parseInt(min_bet);
+                // c_after = credit;
+                // point_style_result = "text-error font-bold"
+                // point_result = "-" + (totalbet * parseInt(min_bet))
                 break;
             }
             factory_click("SINGLE_BET");
@@ -1967,10 +1967,6 @@
           flag_win = status[0] 
           sound = 0;
           win[sound].play();
-          // console.log(status[1])
-          // if(tipe_data != "DEAL"){
-          //   // sendData(totalbet,min_bet,c_before,c_after,0,0,"",shuffleArray,"","LOSE")
-          // }
           credit_animation_factory(credit,totalbet,status[1],status[2])
         }
     }
@@ -2385,7 +2381,8 @@
       } else if (json.status == 403) {
           alert(json.message);
       } else {
-      
+        
+        updatecredit()
         idtransaksi = json.client_idtransaksi
       
         // let card = "2-11-52-17-4-23-40"
@@ -2442,6 +2439,7 @@
       } else if (json.status == 403) {
           alert(json.message);
       } else {
+        updatecredit()
         if(tipe_click == "FULL_BET") {
           shuffleArray_fullbet()
         }else{
@@ -2504,6 +2502,13 @@
             }
         }
       }
+    }
+    function updatecredit(){
+      c_before = credit;
+      credit = credit - parseInt(min_bet);
+      c_after = credit;
+      point_style_result = "text-error font-bold"
+      point_result = "-" + (totalbet * parseInt(min_bet))
     }
   </script>
   
