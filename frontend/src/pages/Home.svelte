@@ -196,6 +196,7 @@
   const pattern_3_12 = [14,2,3]
   
   let list_invoice = []
+  let list_invoicedetail = []
   let list_detailtransaksi = []
   let list_detailtransaksi_win = []
   let list_detailtransaksi_notewin = ""
@@ -2290,7 +2291,7 @@
     isModal_allinvoice = true
     fetch_invoicell()
   };
-  const call_detailinvoice = (e,f,d) => {
+  const call_detailinvoice = (idinvoice,e,f,d) => {
     isModal_detailtransaksi = true
     // alert(f)
     list_detailtransaksi = []
@@ -2310,7 +2311,7 @@
         }
       }
     }
-
+    fetch_invoicedetail(idinvoice)
   };
   const call_carabermain = () => {
     isModal_carabermain = true
@@ -2461,6 +2462,48 @@
               ];
           }
       }
+    }
+  }
+  async function fetch_invoicedetail(invoice) {
+    list_invoicedetail = []
+    const res = await fetch(path_api+"api/listinvoicedetail", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+      invoice_company: client_company,
+      invoice_id: invoice,
+      }),
+    });
+    const json = await res.json();
+    if (json.status === 400) {
+    } else if (json.status == 403) {
+      alert(json.message);
+    } else {
+    let record = json.record;
+    if (record != null) {
+      for (var i = 0; i < record.length; i++) {
+        let status_css = ""
+        if(record[i]["invoicedetail_status"] == "LOSE"){
+        status_css = "bg-error text-white";
+        }else{
+        status_css = "bg-success text-black";
+        }
+        list_invoicedetail = [
+          ...list_invoicedetail,
+          {
+            invoicedetail_id: record[i]["invoicedetail_id"],
+            invoicedetail_date: record[i]["invoicedetail_date"],
+            invoicedetail_round: record[i]["invoicedetail_round"],
+            invoicedetail_bet: record[i]["invoicedetail_bet"],
+            invoicedetail_win: record[i]["invoicedetail_win"],
+            invoicedetail_status: record[i]["invoicedetail_status"],
+            invoicedetail_statuscss: status_css,
+          },
+        ];
+      }
+    }
     }
   }
   function updatepoin_single(){
@@ -2701,7 +2744,7 @@
                     <span class="{rec.invoice_status_css} p-1 text-xs lg:text-sm  uppercase  rounded-lg w-20 ">{rec.invoice_status}</span>
                   </td>
                   <td on:click={() => {
-                    call_detailinvoice(rec.invoice_card_result,rec.invoice_card_win,rec.invoice_nmpoin);
+                    call_detailinvoice(rec.invoice_id,rec.invoice_card_result,rec.invoice_card_win,rec.invoice_nmpoin);
                     }} class="text-xs  text-left whitespace-nowrap align-top cursor-pointer underline">
                     {rec.invoice_id}<br />
                     {rec.invoice_date}<br />
@@ -2775,6 +2818,30 @@
           {/each}
         </div>
       </div>
+      <table class="table table-xs w-full" >
+        <thead class="sticky top-0">
+          <tr>
+            <th width="5%" class="text-xs text-center align-top">STATUS</th>
+            <th width="*" class="text-xs text-center align-top">DATE</th>
+            <th width="15%" class="text-xs text-right align-top">ROUND</th>
+            <th width="15%" class="text-xs text-right align-top">BET</th>
+            <th width="15%" class="text-xs text-right align-top">WIN</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each list_invoicedetail as rec}
+          <tr>
+          <td class="text-xs  text-center whitespace-nowrap align-top">
+            <span class="{rec.invoicedetail_statuscss} p-1 text-xs lg:text-sm  uppercase  rounded-lg w-20" style="{rec.invoicedetail_statuscss}">{rec.invoicedetail_status}</span>
+          </td>
+          <td class="text-xs  text-center whitespace-nowrap align-top"> {rec.invoicedetail_date}</td>
+          <td class="text-xs text-right  whitespace-nowrap align-top text-info ">{new Intl.NumberFormat().format(rec.invoicedetail_round)}</td>
+          <td class="text-xs text-right  whitespace-nowrap align-top text-error ">{new Intl.NumberFormat().format(rec.invoicedetail_bet)}</td>
+          <td class="text-xs text-right  whitespace-nowrap align-top text-accent ">{new Intl.NumberFormat().format(rec.invoicedetail_win)}</td>
+          </tr>
+          {/each}
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
