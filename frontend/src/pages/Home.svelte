@@ -2,6 +2,7 @@
   import dayjs from "dayjs";
   import utc from "dayjs/plugin/utc";
   import timezone from "dayjs/plugin/timezone";
+
   
   dayjs.extend(utc);
   dayjs.extend(timezone);
@@ -123,6 +124,46 @@
     {id:"jk_black",val:"JK",val_display:1,code_card:"JK",img:"./CARD/WHITE/CARD_JOKER_BLACK.png"},
     {id:"jk_red",val:"JK",val_display:1,code_card:"JK",img:"./CARD/WHITE/CARD_JOKER_RED.png"},
   ]
+  const sourcechar = `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-`
+  const datakey = [
+    `9PtKwGcxbOZRD3CFrsXH6eNlg4MJUQLS0qT52dakj-iBhvVo1IzWyYumA8p7Efn`,
+    `dSNHkYUPGnAxZeqgjRp6iIhOK3l2fc1vu8ortD-T4C9mFEwB0MQWJLsaz7y5VXb`,
+    `AZsQFi3KYmGpfONVucqDM0tek2xwICPrLdlS746vhjz9nByURE8HToW-gbJaX15`,
+    `Ij6fRPVJ8tQETL3vdOWzYe7b0KkZ1xuryDaipnowcB4NM59GS2FXUgCAHmqlhs-`,
+    `91pkw8nNDFvtHoS6i2xj0bLuaQ5TYchXUMgA4-RfmBsde3y7lWGVKIPCEqJOzrZ`,
+    `gCKpqdzfFZlsYQ681OG9N40UjLPnratBT5mRuvD3h7eV2AxXbokyJEwiWScMH-I`,
+    `xt8qzmY1seR53HFyZ42BfIGXh9EQ-TSbdkcpDgUAOi0MvCK7Wwj6JonNrVuPlaL`,
+    `uFGoj10-8a2wm9AWUSgnRvKLX6fTZCD7Ist3cdNqkyHV5leMQ4zrpOEBiYPJxbh`,
+    `ALQE5XfYBbehI3M8K07w9FCkcDim4ntpUloTJ-OvHZs2j6rxgu1qaGNyRVPdzWS`,
+    `eD6E4aoUPuICqpVrQAlWGSHLTzj2Jn75bFg1NKMYtx3syhcOvdw-iBmR90kf8XZ`,
+    `2ZCVlMSJBgG970invITxOfEqyP-kz3d6Hs5FKejphA1DQtX8LWuU4RawcYrobNm`,
+    `ARd0Bm7XnrVOGY8EH6PQ5Fh-ebWwafsJUCv3Dl2z4tZLcgKyqu9i1oxSjMINTkp`,
+    `Y4BbT5QmJ9kyZAd6Rqx-tXCNs2F1c3whrgfDuO7HVa0UiEpWMIPjeKlSLnv8oGz`,
+    `6JHnsFtArYOV9gmfEdI-UaCoS8WQexXBkPzbLcjMp0DN71qGKTZw4y23Rl5vuhi`,
+    `01Hcdm7zv4KNg8uaeoYtrxZRWIBjbC2UO-XGPspkA9hn3TyDfQiwMLlEFS65VJq`,
+    `94cCRaG2I0stQSmP-piM3KOUfWyLgznvu5F7TjEhAbDBdNlVqe6XwH8JYxokr1Z`,
+    `iV-QIkPHF3KXm6J0xdORBytnWLTG4CElDrZSu5f2ajwvN8g7Ubeqczs1MYA9hpo`,
+    `xYvafzdK0FeUXbESZwP1sWTo4DBj6VgJR2h7lIctCuQO9nmyLMG-NAk3r5q8pHi`,
+    `GI2F09xVyOpgk1URfYJ4Qm8qsrBNPHcbvD5juweSCl3LhKoTiz7MXnEZA6Wdat-`,
+    `DoeZ9yvHTtUIhxsBFz23VaMpwjKiNCQ4rO-7lE0PmJ1cngYSXk8LdbW5uqfRA6G`,
+    `HTbgtmAkQKElyRUuo3-J24G7zrpBnX6P8vjqM0deSiwZhfWOsV5YNxcLCa19DFI`
+  ];
+  function Decryption(data) {
+    let temp = data.split("|");
+    let datatext = temp[0]
+    let keymap = temp[1]
+    let key = datakey[keymap]
+    let result = ""
+    for(let i=0; i<temp[0].length;i++){
+      let temp_indexkey = key.indexOf(datatext[i]);
+      for(let x=0; x<sourcechar.length;x++){
+        if(x == temp_indexkey){
+          result += sourcechar[x]
+        }
+      }
+    }
+    return result
+}
   function updateClock() {
     let endtime = dayjs().tz(client_timezone).format("DD MMM YYYY | HH:mm");
     let endtime_data = dayjs().tz(client_timezone).format("YYYY-MM-DD HH:mm:ss");
@@ -2346,9 +2387,9 @@
     } else {
     
       idtransaksi = json.client_idtransaksi
-    
+      // console.log()
       // let card = "2-11-52-17-4-23-40"
-      let card = json.client_cardgame
+      let card = Decryption(json.client_cardgame)
       let card_length = parseInt(json.client_cardlength)
       const myArray = card.split("-");
       shuffleArray = [];
@@ -2520,6 +2561,8 @@
     point_style_result = "text-error font-bold"
     point_result = "-" + (totalbet * parseInt(min_bet))
   }
+
+  // console.log(datakey[0])
 </script>
 
 
