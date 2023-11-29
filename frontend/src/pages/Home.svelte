@@ -2430,7 +2430,7 @@
       let record = json.record;
       if (record != null) {
           for (var i = 0; i < record.length; i++) {
-            let winlose = parseInt(record[i]["invoice_totalwin"]) - (parseInt(record[i]["invoice_round"]*record[i]["invoice_totalbet"]))
+            let winlose = parseInt(record[i]["invoice_totalwin"]) - (parseInt(record[i]["invoice_totalbet"]))
             let winlose_css = "";
             let status_css = ""
             if(winlose >0){
@@ -2694,11 +2694,6 @@
     </div>
   </section>
  
-
-
-
-
-
 
 <input type="checkbox" id="my-modal-information" class="modal-toggle" bind:checked={isModalMinBet}>
 <div class="modal" on:click|self={()=>isModalMinBet = false}>
