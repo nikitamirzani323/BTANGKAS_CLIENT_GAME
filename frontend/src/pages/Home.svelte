@@ -2387,7 +2387,7 @@
     } else {
     
       idtransaksi = json.client_idtransaksi
-      // console.log()
+ 
       // let card = "2-11-52-17-4-23-40"
       let card = Decryption(json.client_cardgame)
       let card_length = parseInt(json.client_cardlength)
